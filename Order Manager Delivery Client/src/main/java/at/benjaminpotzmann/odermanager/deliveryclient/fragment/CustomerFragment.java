@@ -12,8 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
-import at.benjaminpotzmann.odermanager.deliveryclient.dao.AddressDaoStub;
+import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
+import at.benjaminpotzmann.odermanager.deliveryclient.dto.Town;
 
 
 /**
@@ -25,32 +26,31 @@ public class CustomerFragment extends Fragment implements AdapterView.OnItemClic
     private static final String ARG_TOWN = "town";
 
     /**
-     * @param address The town which this Fragment displays. Only Zipcode and Location are used.
+     * @param town The town which this Fragment displays. Only Zipcode and Location are used.
      * @return The initialized Fragment
      */
-    public static CustomerFragment newInstanceForTown(Address address) {
+    public static CustomerFragment newInstanceForTown(Town town) {
         CustomerFragment fragment = new CustomerFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TOWN, address);
+        args.putSerializable(ARG_TOWN, town);
         fragment.setArguments(args);
         return fragment;
     }
 
-    private Address town;
+    private Town town;
     private ListAdapter adapter;
     private AbsListView listView;
     private OnFragmentInteractionListener listener;
-    private AddressDaoStub dao = new AddressDaoStub();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null)
-            town = (Address) getArguments().getSerializable(ARG_TOWN);
+            town = (Town) getArguments().getSerializable(ARG_TOWN);
 
         adapter = new ArrayAdapter<Address>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, dao.getAddressesForTown(town));
+                android.R.layout.simple_list_item_1, android.R.id.text1, DaoStub.getInstance().getAddressesForTown(town));
     }
 
     @Override

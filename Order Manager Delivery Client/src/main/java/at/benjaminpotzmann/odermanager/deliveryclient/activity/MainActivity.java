@@ -1,5 +1,6 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -9,8 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
-import at.benjaminpotzmann.odermanager.deliveryclient.dao.AddressDaoStub;
+import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
+import at.benjaminpotzmann.odermanager.deliveryclient.dto.Town;
 import at.benjaminpotzmann.odermanager.deliveryclient.fragment.CustomerFragment;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, CustomerFragment.OnFragmentInteractionListener {
@@ -34,11 +36,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         // Set up the dropdown list navigation in the action bar.
         actionBar.setListNavigationCallbacks(
                 // Specify a SpinnerAdapter to populate the dropdown list.
-                new ArrayAdapter<String>(
+                new ArrayAdapter<Town>(
                         actionBar.getThemedContext(),
                         android.R.layout.simple_list_item_1,
                         android.R.id.text1,
-                        AddressDaoStub.getTownNames()),
+                        DaoStub.getInstance().getTowns()),
                 this);
     }
 
@@ -84,7 +86,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         // When the given dropdown item is selected, show its contents in the
         // container view.
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, CustomerFragment.newInstanceForTown(AddressDaoStub.getTowns().get(position)))
+                .replace(R.id.container, CustomerFragment.newInstanceForTown(DaoStub.getInstance().getTowns().get(position)))
                 .commit();
 
         return true;
@@ -93,6 +95,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     @Override
     public void onFragmentInteraction(Address address) {
         Toast.makeText(this, address.toString(), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, DisplayOrdersActivity.class);
+        intent.putExtra(DisplayOrdersActivity.EXTRA_ADDRESS, address);
+        startActivity(intent);
     }
 
 }
