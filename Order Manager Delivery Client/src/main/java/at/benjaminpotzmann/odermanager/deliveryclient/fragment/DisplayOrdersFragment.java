@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
 import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
@@ -39,6 +41,7 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
      * The fragment's ListView/GridView.
      */
     private AbsListView listView;
+    private TextView textView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -71,6 +74,17 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
 
         adapter = new ArrayAdapter<Order>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, DaoStub.getInstance().getOrdersForAddress(address));
+
+
+    }
+
+    private double calcSum(Address address) {
+        double sum = 0;
+        List<Order> orders = DaoStub.getInstance().getOrdersForAddress(address);
+        for (Order order : orders) {
+            sum += order.getTotalPrice();
+        }
+        return sum;
     }
 
     @Override
@@ -84,6 +98,9 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
 
         // Set OnItemClickListener so we can be notified on item clicks
         listView.setOnItemClickListener(this);
+
+        textView = (TextView) view.findViewById(R.id.displayorders_sum);
+        textView.setText("Summe: " + String.format("%.2f", calcSum(address)));
 
         return view;
     }
@@ -112,19 +129,6 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
             listener.onFragmentInteraction((Order) parent.getItemAtPosition(position));
-        }
-    }
-
-    /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = listView.getEmptyView();
-
-        if (emptyText instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
         }
     }
 

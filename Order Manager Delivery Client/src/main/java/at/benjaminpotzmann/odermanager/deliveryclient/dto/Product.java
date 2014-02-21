@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by Giymo11 on 20.02.14.
+ * The DTO for a product
  */
 public class Product implements Serializable {
 
@@ -11,8 +12,14 @@ public class Product implements Serializable {
     private String name;
     private double price;
 
-    public Product(Category category, String name, double price) {
+    public Product(String name, double price, Category category) {
         this.category = category;
+        this.name = name;
+        this.price = price;
+    }
+
+    public Product(String name, double price) {
+        this.category = null;
         this.name = name;
         this.price = price;
     }

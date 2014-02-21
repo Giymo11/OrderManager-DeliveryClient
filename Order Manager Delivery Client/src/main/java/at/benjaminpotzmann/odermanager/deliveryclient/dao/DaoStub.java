@@ -49,12 +49,12 @@ public class DaoStub {
         categories.add(new Category("Gebaeck"));
 
         products = new ArrayList<Product>();
-        products.add(new Product(categories.get(0), "Mischbrot 1kg", 1.0));
-        products.add(new Product(categories.get(0), "Roggenbrot 1kg", 0.8));
-        products.add(new Product(categories.get(1), "Zimtschnecke", 1.5));
-        products.add(new Product(categories.get(1), "Krapfen", 0.99));
-        products.add(new Product(categories.get(2), "Laugenstangerl", 0.7));
-        products.add(new Product(categories.get(2), "Kipferl", 0.45));
+        products.add(new Product("Mischbrot 1kg", 1.0, categories.get(0)));
+        products.add(new Product("Roggenbrot 1kg", 0.8, categories.get(0)));
+        products.add(new Product("Zimtschnecke", 1.5, categories.get(1)));
+        products.add(new Product("Krapfen", 0.99, categories.get(1)));
+        products.add(new Product("Laugenstangerl", 0.7, categories.get(2)));
+        products.add(new Product("Kipferl", 0.45, categories.get(2)));
 
         orders = new ArrayList<Order>();
 

@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="at.benjaminpotzmann.odermanager.deliveryclient.fragment.DisplayOrdersFragment">
 
     <ListView
         android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" />
 
     <TextView
-        android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" />
+        android:id="@+id/displayorders_sum"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:layout_weight="0"
+        android:textAlignment="center"
+        android:background="@color/om_green_very_dark"
+        android:textColor="@color/om_text_on_green"
+        android:padding="16dp" />
 
-</FrameLayout>
+</LinearLayout>

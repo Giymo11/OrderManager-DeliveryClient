@@ -11,10 +11,17 @@
         android:layout_height="match_parent"
         android:numColumns="2" />
 
+
     <TextView
-        android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" />
+        android:id="@+id/displayorders_sum"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:layout_weight="0"
+        android:textAlignment="center"
+        android:background="@color/om_green_very_dark"
+        android:textColor="@color/om_text_on_green"
+        android:padding="16dp" />
 
 </FrameLayout>
