@@ -24,5 +24,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
+        <activity
+            android:name="at.benjaminpotzmann.odermanager.deliveryclient.activity.PickProductActivity"
+            android:label="@string/title_activity_pick_product"></activity>
     </application>
+
 </manifest>

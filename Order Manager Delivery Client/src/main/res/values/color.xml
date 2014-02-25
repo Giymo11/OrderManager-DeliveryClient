@@ -4,4 +4,5 @@
     <color name="holo_green_light">#ff99cc00</color>
     <color name="om_green_very_dark">#ff336600</color>
     <color name="om_text_on_green">#ffbebebe</color>
+    <color name="om_bg_orange_light">#ffffbb33</color>
 </resources>

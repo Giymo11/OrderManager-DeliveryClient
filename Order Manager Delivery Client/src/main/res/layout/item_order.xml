@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/displayorders_list_background">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order"
+        android:id="@+id/displayorders_list_ordername"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Einzelpreis: 2.50 €"
+        android:id="@+id/displayorders_list_singleprice"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_below="@id/displayorders_list_ordername"
+        android:layout_alignLeft="@id/displayorders_list_ordername" />
+
+    <!--
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5.00 €"
+        android:id="@+id/displayorders_list_totalprice"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+        -->
+
+
+    <CheckBox
+        android:layout_width="@dimen/list_item_touchable"
+        android:layout_height="@dimen/list_item_touchable"
+        android:id="@+id/displayorders_list_delivered"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" />
+
+    <Button
+        android:layout_width="@dimen/list_item_touchable"
+        android:layout_height="@dimen/list_item_touchable"
+        android:text="+"
+        android:textSize="30dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/displayorders_list_more"
+        android:layout_toLeftOf="@id/displayorders_list_delivered"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:text="8"
+        android:id="@+id/displayorders_list_quantity"
+        android:textSize="@dimen/list_item_touchable"
+        android:layout_toLeftOf="@id/displayorders_list_more"
+        android:gravity="center" />
+
+    <Button
+        android:layout_width="@dimen/list_item_touchable"
+        android:layout_height="@dimen/list_item_touchable"
+        android:text="-"
+        android:textSize="30dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/displayorders_list_less"
+        android:layout_toLeftOf="@id/displayorders_list_quantity"
+        android:layout_centerVertical="true" />
+
+    <!--
+    <TextView
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:text="Stück"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_alignBaseline="@id/displayorders_list_singleprice"
+        android:layout_alignLeft="@id/displayorders_list_quantity"/>
+        -->
+
+</RelativeLayout>

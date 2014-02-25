@@ -1,7 +1,8 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.dto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+
+import at.benjaminpotzmann.odermanager.deliveryclient.helper.PriceFormatHelper;
 
 /**
  * Created by Giymo11 on 20.02.14.
@@ -12,11 +13,20 @@ public class Order implements Serializable {
     private Address address;
     private Product product;
     private int quantity;
+    private boolean delivered = false;
 
     public Order(Address address, Product product, int quantity) {
         this.address = address;
         this.product = product;
         this.quantity = quantity;
+    }
+
+    public boolean isDelivered() {
+        return delivered;
+    }
+
+    public void setDelivered(boolean delivered) {
+        this.delivered = delivered;
     }
 
     public Address getAddress() {
@@ -31,6 +41,21 @@ public class Order implements Serializable {
         return quantity;
     }
 
+    public int increaseQuantity() {
+        return ++quantity;
+    }
+
+    public int decreaseQuantity() {
+        if (quantity > 0)
+            return --quantity;
+        else
+            return 0;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public String toFullString() {
         return "Order{" +
                 "address=" + address +
@@ -41,20 +66,10 @@ public class Order implements Serializable {
 
     @Override
     public String toString() {
-        return "" + quantity + " mal " + product.getName() + " á " + product.getPrice() + " = " + format(product.getPrice() * quantity);
-    }
-
-    private static double round(double value) {
-        BigDecimal biiig = new BigDecimal(value);
-        biiig.setScale(2, BigDecimal.ROUND_HALF_UP);
-        return biiig.doubleValue();
-    }
-
-    private static String format(double value) {
-        return String.format("%.2f", round(value));
+        return "" + quantity + " mal " + product.getName() + " á " + product.getPrice() + " = " + PriceFormatHelper.format(product.getPrice() * quantity);
     }
 
     public double getTotalPrice() {
-        return round(quantity * product.getPrice());
+        return PriceFormatHelper.round(quantity * product.getPrice());
     }
 }

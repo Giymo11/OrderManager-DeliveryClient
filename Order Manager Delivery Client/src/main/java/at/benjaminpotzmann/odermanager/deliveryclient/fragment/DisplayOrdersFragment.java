@@ -1,6 +1,7 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.fragment;
 
 import android.app.Activity;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,16 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.List;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
+import at.benjaminpotzmann.odermanager.deliveryclient.adapter.OrderAdapter;
 import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Order;
+import at.benjaminpotzmann.odermanager.deliveryclient.helper.PriceFormatHelper;
 
 /**
  * A fragment representing a list of Items.
@@ -47,7 +49,7 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter adapter;
+    private OrderAdapter adapter;
 
     public static DisplayOrdersFragment newInstance(Address address) {
         DisplayOrdersFragment fragment = new DisplayOrdersFragment();
@@ -70,12 +72,8 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
 
         if (getArguments() != null) {
             address = (Address) getArguments().getSerializable(ARG_ADDRESS);
+            adapter = new OrderAdapter(getActivity(), R.layout.item_order, address);
         }
-
-        adapter = new ArrayAdapter<Order>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DaoStub.getInstance().getOrdersForAddress(address));
-
-
     }
 
     private double calcSum(Address address) {
@@ -100,9 +98,20 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
         listView.setOnItemClickListener(this);
 
         textView = (TextView) view.findViewById(R.id.displayorders_sum);
-        textView.setText("Summe: " + String.format("%.2f", calcSum(address)));
+        updateSum();
+
+        adapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                updateSum();
+            }
+        });
 
         return view;
+    }
+
+    private void updateSum() {
+        textView.setText("Summe: " + PriceFormatHelper.format(calcSum(address)));
     }
 
     @Override
@@ -130,6 +139,14 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
             // fragment is attached to one) that an item has been selected.
             listener.onFragmentInteraction((Order) parent.getItemAtPosition(position));
         }
+    }
+
+    public void addOrder(Order order) {
+        adapter.add(order);
+    }
+
+    public void notifyDataSetChanged() {
+        adapter.notifyDataSetChanged();
     }
 
     /**

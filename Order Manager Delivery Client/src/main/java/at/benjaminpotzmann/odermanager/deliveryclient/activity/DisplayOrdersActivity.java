@@ -1,20 +1,26 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
+import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Order;
+import at.benjaminpotzmann.odermanager.deliveryclient.dto.Product;
 import at.benjaminpotzmann.odermanager.deliveryclient.fragment.DisplayOrdersFragment;
 
 public class DisplayOrdersActivity extends ActionBarActivity implements DisplayOrdersFragment.OnFragmentInteractionListener {
 
+    private static final String TAG = "deliveryclient.DisplayOrdersActivity";
     public static String EXTRA_ADDRESS = "address";
     private Address address;
+    private DisplayOrdersFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +28,11 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
         setContentView(R.layout.activity_display_orders);
 
         address = (Address) getIntent().getSerializableExtra(EXTRA_ADDRESS);
+        fragment = DisplayOrdersFragment.newInstance(address);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, DisplayOrdersFragment.newInstance(address))
+                    .add(R.id.container, fragment)
                     .commit();
         }
     }
@@ -35,6 +42,13 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.display_orders, menu);
+        menu.add("Add Product").setIcon(android.R.drawable.ic_menu_add).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                addProduct(item);
+                return true;
+            }
+        }).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
@@ -50,5 +64,24 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
     @Override
     public void onFragmentInteraction(Order order) {
         Toast.makeText(this, order.toString(), Toast.LENGTH_LONG).show();
+    }
+
+    public void addProduct(MenuItem item) {
+        Toast.makeText(this, "Please pick a product?", Toast.LENGTH_LONG).show();
+        startActivityForResult(new Intent(this, PickProductActivity.class), PickProductActivity.REQUEST_PRODUCTS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PickProductActivity.REQUEST_PRODUCTS && resultCode == PickProductActivity.RESULT_OK) {
+            Product product = (Product) data.getSerializableExtra(PickProductActivity.EXTRA_PRODUCT);
+            Log.d(TAG, product.toString());
+            Order order = DaoStub.getInstance().addProductForAddress(product, address);
+            if (order != null) {
+                Log.d(TAG, order.toFullString());
+                fragment.addOrder(order);
+            } else
+                fragment.notifyDataSetChanged();
+        }
     }
 }

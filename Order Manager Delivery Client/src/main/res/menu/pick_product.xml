@@ -1,13 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="at.benjaminpotzmann.odermanager.deliveryclient.activity.DisplayOrdersActivity">
-
-    <!--
-    <item
-        android:icon="@android:drawable/ic_menu_add"
-        android:onClick="addProduct" />
-        -->
+    tools:context="at.benjaminpotzmann.odermanager.deliveryclient.activity.PickProductActivity">
 
     <item
         android:id="@+id/action_settings"

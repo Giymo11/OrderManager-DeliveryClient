@@ -17,7 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
+        android:text="@string/desplayorders_sum"
         android:layout_weight="0"
         android:textAlignment="center"
         android:background="@color/om_green_very_dark"

@@ -99,6 +99,10 @@ public class DaoStub {
         return instance;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
     public List<Address> getAddressesForTown(Town town) {
         List<Address> selection = new ArrayList<Address>();
         for (Address address : addresses) {
@@ -125,4 +129,29 @@ public class DaoStub {
         return towns;
     }
 
+    /**
+     * Adds an order.
+     *
+     * @param product the product which is to be ordered
+     * @param address the address the order belongs to
+     * @return the added order, null if an order of this parameters already existed.
+     */
+    public Order addProductForAddress(Product product, Address address) {
+        List<Order> selection = new ArrayList<Order>();
+        for (Order order : orders) {
+            if (order.getAddress().equals(address) && order.getProduct().equals(product)) {
+                selection.add(order);
+            }
+        }
+        Order order;
+        if (!selection.isEmpty()) {
+            order = selection.get(0);
+            order.increaseQuantity();
+            return null;
+        } else {
+            order = new Order(address, product, 1);
+            orders.add(order);
+            return order;
+        }
+    }
 }
