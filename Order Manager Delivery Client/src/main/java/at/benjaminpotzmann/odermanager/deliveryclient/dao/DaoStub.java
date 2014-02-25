@@ -154,4 +154,8 @@ public class DaoStub {
             return order;
         }
     }
+
+    public void addAddress(Address address) {
+        addresses.add(address);
+    }
 }

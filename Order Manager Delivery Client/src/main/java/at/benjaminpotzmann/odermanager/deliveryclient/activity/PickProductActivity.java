@@ -18,7 +18,7 @@ public class PickProductActivity extends ActionBarActivity implements PickProduc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pick_product);
+        setContentView(R.layout.activity_pickproduct);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PickProductFragment())

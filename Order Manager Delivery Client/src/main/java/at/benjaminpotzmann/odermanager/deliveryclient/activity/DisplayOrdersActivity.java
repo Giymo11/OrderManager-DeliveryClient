@@ -15,7 +15,7 @@ import at.benjaminpotzmann.odermanager.deliveryclient.dto.Order;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Product;
 import at.benjaminpotzmann.odermanager.deliveryclient.fragment.DisplayOrdersFragment;
 
-public class DisplayOrdersActivity extends ActionBarActivity implements DisplayOrdersFragment.OnFragmentInteractionListener {
+public class DisplayOrdersActivity extends ActionBarActivity {
 
     private static final String TAG = "deliveryclient.DisplayOrdersActivity";
     public static String EXTRA_ADDRESS = "address";
@@ -25,10 +25,10 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_orders);
+        setContentView(R.layout.activity_displayorders);
 
         address = (Address) getIntent().getSerializableExtra(EXTRA_ADDRESS);
-        fragment = DisplayOrdersFragment.newInstance(address);
+        fragment = DisplayOrdersFragment.newInstanceForAddress(address);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -59,11 +59,6 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFragmentInteraction(Order order) {
-        Toast.makeText(this, order.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void addProduct(MenuItem item) {

@@ -12,5 +12,9 @@
     <string name="desplayorders_sum">Summe: </string>
     <string name="title_activity_pick_product">PickProductActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="create">Anlegen</string>
+    <string name="dialog_createaddress">Adresse anlegen</string>
+    <string name="hint_createaddress"><![CDATA[Straße & Hausnummer]]></string>
 
 </resources>

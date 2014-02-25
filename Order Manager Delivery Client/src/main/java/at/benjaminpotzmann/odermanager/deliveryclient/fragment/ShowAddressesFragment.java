@@ -21,7 +21,7 @@ import at.benjaminpotzmann.odermanager.deliveryclient.dto.Town;
  * Created by Giymo11 on 11.02.14.
  * The Fragment used to display the customers' addresses
  */
-public class CustomerFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class ShowAddressesFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private static final String ARG_TOWN = "town";
 
@@ -29,8 +29,8 @@ public class CustomerFragment extends Fragment implements AdapterView.OnItemClic
      * @param town The town which this Fragment displays. Only Zipcode and Location are used.
      * @return The initialized Fragment
      */
-    public static CustomerFragment newInstanceForTown(Town town) {
-        CustomerFragment fragment = new CustomerFragment();
+    public static ShowAddressesFragment newInstanceForTown(Town town) {
+        ShowAddressesFragment fragment = new ShowAddressesFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_TOWN, town);
         fragment.setArguments(args);
@@ -38,7 +38,7 @@ public class CustomerFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     private Town town;
-    private ListAdapter adapter;
+    private ArrayAdapter<Address> adapter;
     private AbsListView listView;
     private OnFragmentInteractionListener listener;
 
@@ -90,8 +90,12 @@ public class CustomerFragment extends Fragment implements AdapterView.OnItemClic
         if (null != listener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            listener.onFragmentInteraction((Address) parent.getItemAtPosition(position));
+            listener.onAddressPicked((Address) parent.getItemAtPosition(position));
         }
+    }
+
+    public void addAddress(Address address) {
+        adapter.add(address);
     }
 
     /**
@@ -105,6 +109,8 @@ public class CustomerFragment extends Fragment implements AdapterView.OnItemClic
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Address address);
+        public void onAddressPicked(Address address);
     }
+
+
 }

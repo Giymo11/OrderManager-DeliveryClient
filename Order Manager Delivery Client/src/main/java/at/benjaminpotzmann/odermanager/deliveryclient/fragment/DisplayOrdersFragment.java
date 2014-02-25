@@ -1,6 +1,5 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.fragment;
 
-import android.app.Activity;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,14 +29,14 @@ import at.benjaminpotzmann.odermanager.deliveryclient.helper.PriceFormatHelper;
  * Activities containing this fragment MUST implement the {@link at.benjaminpotzmann.odermanager.deliveryclient.fragment.DisplayOrdersFragment.OnFragmentInteractionListener}
  * interface.
  */
-public class DisplayOrdersFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class DisplayOrdersFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_ADDRESS = "address";
 
     private Address address;
 
-    private OnFragmentInteractionListener listener;
+    //private OnFragmentInteractionListener listener;
 
     /**
      * The fragment's ListView/GridView.
@@ -51,7 +50,7 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
      */
     private OrderAdapter adapter;
 
-    public static DisplayOrdersFragment newInstance(Address address) {
+    public static DisplayOrdersFragment newInstanceForAddress(Address address) {
         DisplayOrdersFragment fragment = new DisplayOrdersFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_ADDRESS, address);
@@ -95,7 +94,7 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
         ((AdapterView<ListAdapter>) listView).setAdapter(adapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
-        listView.setOnItemClickListener(this);
+        //listView.setOnItemClickListener(this);
 
         textView = (TextView) view.findViewById(R.id.displayorders_sum);
         updateSum();
@@ -114,7 +113,7 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
         textView.setText("" + PriceFormatHelper.format(calcSum(address)));
     }
 
-    @Override
+    /*@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
@@ -131,7 +130,6 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
         listener = null;
     }
 
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (null != listener) {
@@ -139,7 +137,7 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
             // fragment is attached to one) that an item has been selected.
             listener.onFragmentInteraction((Order) parent.getItemAtPosition(position));
         }
-    }
+    }*/
 
     public void addOrder(Order order) {
         adapter.add(order);
