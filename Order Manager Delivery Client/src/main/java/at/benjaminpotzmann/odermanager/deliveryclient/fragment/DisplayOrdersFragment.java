@@ -111,7 +111,7 @@ public class DisplayOrdersFragment extends Fragment implements AbsListView.OnIte
     }
 
     private void updateSum() {
-        textView.setText("Summe: " + PriceFormatHelper.format(calcSum(address)));
+        textView.setText("" + PriceFormatHelper.format(calcSum(address)));
     }
 
     @Override

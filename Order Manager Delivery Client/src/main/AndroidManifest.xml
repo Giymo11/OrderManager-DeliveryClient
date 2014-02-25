@@ -19,6 +19,7 @@
         <activity
             android:name="at.benjaminpotzmann.odermanager.deliveryclient.activity.DisplayOrdersActivity"
             android:label="@string/title_activity_display_orders"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName="at.benjaminpotzmann.odermanager.deliveryclient.activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -26,7 +27,10 @@
         </activity>
         <activity
             android:name="at.benjaminpotzmann.odermanager.deliveryclient.activity.PickProductActivity"
-            android:label="@string/title_activity_pick_product"></activity>
+            android:label="@string/title_activity_pick_product"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+
+        </activity>
     </application>
 
 </manifest>

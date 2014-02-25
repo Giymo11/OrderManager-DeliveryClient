@@ -9,6 +9,6 @@ public class PriceFormatHelper implements Serializable {
     }
 
     public static String format(double value) {
-        return String.format("%.2f €", PriceFormatHelper.round(value));
+        return String.format("€ %.2f", PriceFormatHelper.round(value));
     }
 }
