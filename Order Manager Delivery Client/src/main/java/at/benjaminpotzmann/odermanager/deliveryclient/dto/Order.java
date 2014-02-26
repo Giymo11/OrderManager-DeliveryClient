@@ -10,22 +10,25 @@ import at.benjaminpotzmann.odermanager.deliveryclient.helper.PriceFormatHelper;
  */
 public class Order implements Serializable {
 
+    public static final int NOT_DELIVERED = -1;
+
     private Address address;
     private Product product;
-    private int quantity;
-    private boolean delivered = false;
+    private int ordered;
+    private int delivered;
 
-    public Order(Address address, Product product, int quantity) {
+    public Order(Address address, Product product, int ordered) {
         this.address = address;
         this.product = product;
-        this.quantity = quantity;
+        this.ordered = ordered;
+        this.delivered = NOT_DELIVERED;
     }
 
-    public boolean isDelivered() {
+    public int getDelivered() {
         return delivered;
     }
 
-    public void setDelivered(boolean delivered) {
+    public void setDelivered(int delivered) {
         this.delivered = delivered;
     }
 
@@ -37,39 +40,42 @@ public class Order implements Serializable {
         return product;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getOrdered() {
+        return ordered;
     }
 
-    public int increaseQuantity() {
-        return ++quantity;
+    public int increaseDelivered() {
+        if (delivered == NOT_DELIVERED)
+            delivered = ordered;
+        return ++delivered;
     }
 
-    public int decreaseQuantity() {
-        if (quantity > 0)
-            return --quantity;
+    public int decreaseDelivered() {
+        if (delivered > 0)
+            return --delivered;
         else
             return 0;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setOrdered(int ordered) {
+        this.ordered = ordered;
     }
 
     public String toFullString() {
         return "Order{" +
                 "address=" + address +
                 ", product=" + product +
-                ", quantity=" + quantity +
+                ", ordered=" + ordered +
+                ", delivered=" + delivered +
                 '}';
     }
 
     @Override
     public String toString() {
-        return "" + quantity + " mal " + product.getName() + " á " + product.getPrice() + " = " + PriceFormatHelper.format(product.getPrice() * quantity);
+        return "" + ordered + " mal " + product.getName() + " á " + product.getPrice() + " = " + PriceFormatHelper.format(getTotalPrice());
     }
 
     public double getTotalPrice() {
-        return PriceFormatHelper.round(quantity * product.getPrice());
+        return PriceFormatHelper.round((delivered == NOT_DELIVERED ? ordered : delivered) * product.getPrice());
     }
 }

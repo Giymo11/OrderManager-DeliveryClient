@@ -46,7 +46,7 @@ public class OrderAdapter extends ArrayAdapter<Order> {
         final Order order = this.getItem(position);
 
         final TextView name = (TextView) convertView.findViewById(R.id.displayorders_list_ordername);
-        final TextView singleprice = (TextView) convertView.findViewById(R.id.displayorders_list_singleprice);
+        final TextView originalOrder = (TextView) convertView.findViewById(R.id.displayorders_list_singleprice);
         final TextView quantity = (TextView) convertView.findViewById(R.id.displayorders_list_quantity);
         final Button more = (Button) convertView.findViewById(R.id.displayorders_list_more);
         final Button less = (Button) convertView.findViewById(R.id.displayorders_list_less);
@@ -54,18 +54,17 @@ public class OrderAdapter extends ArrayAdapter<Order> {
         final RelativeLayout background = (RelativeLayout) convertView.findViewById(R.id.displayorders_list_background);
 
         name.setText(order.getProduct().getName());
-        singleprice.setText("á " + PriceFormatHelper.format(order.getProduct().getPrice()));
+        originalOrder.setText(getContext().getResources().getString(R.string.orderadapter_ordered) + ": " + order.getOrdered() + " á " + PriceFormatHelper.format(order.getProduct().getPrice()));
         // Don't delete the "" + as it is necessary, otherwise it thinks it is a resource id and fails.
-        quantity.setText("" + order.getQuantity());
-        quantity.setTag(order.getQuantity());
+        quantity.setText("" + showQuantity(order));
         background.setBackgroundColor(getContext().getResources().getColor(android.R.color.background_light));
         //delivered.setChecked(order.isDelivered());
 
         more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                order.increaseQuantity();
-                updateBackgroundColor(order, quantity, background);
+                order.setDelivered(showQuantity(order) + 1);
+                updateBackgroundColor(order, background);
                 notifyDataSetChanged();
             }
         });
@@ -73,8 +72,8 @@ public class OrderAdapter extends ArrayAdapter<Order> {
         less.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                order.decreaseQuantity();
-                updateBackgroundColor(order, quantity, background);
+                order.setDelivered(showQuantity(order) - 1);
+                updateBackgroundColor(order, background);
                 notifyDataSetChanged();
             }
         });
@@ -89,10 +88,17 @@ public class OrderAdapter extends ArrayAdapter<Order> {
         return convertView;
     }
 
-    private void updateBackgroundColor(Order order, TextView quantity, RelativeLayout background) {
-        if (order.getQuantity() == (Integer) quantity.getTag())
+    private void updateBackgroundColor(Order order, RelativeLayout background) {
+        if (order.getOrdered() == order.getDelivered())
             background.setBackgroundColor(getContext().getResources().getColor(android.R.color.background_light));
         else
             background.setBackgroundColor(getContext().getResources().getColor(R.color.om_bg_orange_light));
+    }
+
+    private int showQuantity(Order order) {
+        if (order.getDelivered() != Order.NOT_DELIVERED)
+            return order.getDelivered();
+        else
+            return order.getOrdered();
     }
 }

@@ -17,7 +17,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Einzelpreis: 2.50 €"
+        android:text="Bestellt: 5 á 2.50 €"
         android:id="@+id/displayorders_list_singleprice"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_below="@id/displayorders_list_ordername"

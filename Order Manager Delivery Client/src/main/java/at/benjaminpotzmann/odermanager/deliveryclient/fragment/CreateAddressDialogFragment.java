@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
@@ -72,8 +73,13 @@ public class CreateAddressDialogFragment extends DialogFragment {
         builder.setTitle(R.string.dialog_createaddress)
                 .setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // Send the positive button event back to the host activity
-                        listener.onCreateAddress(new Address(town, parseStreet(street.getText()), parseHouseNumber(street.getText())));
+                        try {
+                            // Send the positive button event back to the host activity
+                            listener.onCreateAddress(new Address(town, parseStreet(street.getText()), parseHouseNumber(street.getText())));
+                        } catch (IllegalArgumentException ex) {
+                            Toast.makeText(getActivity(), R.string.error_createaddress, Toast.LENGTH_LONG).show();
+                        }
+
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

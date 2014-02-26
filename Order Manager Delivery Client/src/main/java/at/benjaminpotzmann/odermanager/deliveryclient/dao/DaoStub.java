@@ -137,21 +137,21 @@ public class DaoStub {
      * @return the added order, null if an order of this parameters already existed.
      */
     public Order addProductForAddress(Product product, Address address) {
-        List<Order> selection = new ArrayList<Order>();
+        Order selection = null;
         for (Order order : orders) {
             if (order.getAddress().equals(address) && order.getProduct().equals(product)) {
-                selection.add(order);
+                selection = order;
+                break;
             }
         }
-        Order order;
-        if (!selection.isEmpty()) {
-            order = selection.get(0);
-            order.increaseQuantity();
-            return null;
+        if (selection == null) {
+            selection = new Order(address, product, 0);
+            selection.setDelivered(1);
+            orders.add(selection);
+            return selection;
         } else {
-            order = new Order(address, product, 1);
-            orders.add(order);
-            return order;
+            selection.increaseDelivered();
+            return null;
         }
     }
 
@@ -162,7 +162,8 @@ public class DaoStub {
     public void setDeliveredForAddress(Address address) {
         List<Order> orders = getOrdersForAddress(address);
         for (Order order : orders) {
-            order.setDelivered(true);
+            if (order.getDelivered() == Order.NOT_DELIVERED)
+                order.setDelivered(order.getOrdered());
         }
     }
 }

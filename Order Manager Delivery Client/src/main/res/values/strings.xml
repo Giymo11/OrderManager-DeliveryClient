@@ -17,5 +17,7 @@
     <string name="dialog_createaddress">Adresse anlegen</string>
     <string name="hint_createaddress"><![CDATA[Straße & Hausnummer]]></string>
     <string name="displayorders_deliver">Geliefert</string>
+    <string name="error_createaddress"><![CDATA[Bitte gültige Straße & Hausnummer eingeben!]]></string>
+    <string name="orderadapter_ordered">Bestellt</string>
 
 </resources>
