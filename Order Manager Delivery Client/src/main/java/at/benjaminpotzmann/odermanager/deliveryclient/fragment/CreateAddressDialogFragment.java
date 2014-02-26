@@ -27,7 +27,6 @@ public class CreateAddressDialogFragment extends DialogFragment {
 
     // Use this instance of the interface to deliver action events
     private CreateAddressDialogListener listener;
-    private TextView townView;
     private Town town;
     private EditText street;
 
@@ -62,7 +61,7 @@ public class CreateAddressDialogFragment extends DialogFragment {
 
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_createaddress, null);
 
-        townView = (TextView) view.findViewById(R.id.createaddress_town);
+        TextView townView = (TextView) view.findViewById(R.id.createaddress_town);
         townView.setText(town.toString());
 
         street = (EditText) view.findViewById(R.id.createaddress_street);

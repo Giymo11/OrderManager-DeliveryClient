@@ -116,6 +116,4 @@ public class ShowAddressesFragment extends Fragment implements AdapterView.OnIte
     public interface OnFragmentInteractionListener {
         public void onAddressPicked(Address address);
     }
-
-
 }

@@ -2,6 +2,7 @@ package at.benjaminpotzmann.odermanager.deliveryclient.fragment;
 
 import android.app.Activity;
 import android.database.DataSetObserver;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -107,7 +108,14 @@ public class DisplayOrdersFragment extends Fragment {
         });
 
         Button deliverButton = new Button(getActivity());
-        deliverButton.setTextAppearance(getActivity(), android.R.attr.borderlessButtonStyle);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            deliverButton.setTextAppearance(getActivity(), android.R.attr.borderlessButtonStyle);
+        } else {
+            deliverButton.setTextAppearance(getActivity(), android.R.attr.textAppearanceLarge);
+        }
+        int horizontalPaddingInPixels = getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
+        int verticalPaddingInPixels = getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
+        deliverButton.setPadding(horizontalPaddingInPixels, verticalPaddingInPixels, horizontalPaddingInPixels, verticalPaddingInPixels);
         deliverButton.setText(R.string.displayorders_deliver);
         deliverButton.setBackgroundColor(getResources().getColor(android.R.color.white));
         deliverButton.setOnClickListener(new View.OnClickListener() {
