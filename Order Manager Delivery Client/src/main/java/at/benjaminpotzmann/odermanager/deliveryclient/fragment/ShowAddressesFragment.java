@@ -68,6 +68,11 @@ public class ShowAddressesFragment extends Fragment implements AdapterView.OnIte
         return view;
     }
 
+    /*@Override
+    public void onResume() {
+        listView.invalidate();
+    }*/
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

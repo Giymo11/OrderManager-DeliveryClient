@@ -15,7 +15,7 @@ import at.benjaminpotzmann.odermanager.deliveryclient.dto.Order;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Product;
 import at.benjaminpotzmann.odermanager.deliveryclient.fragment.DisplayOrdersFragment;
 
-public class DisplayOrdersActivity extends ActionBarActivity {
+public class DisplayOrdersActivity extends ActionBarActivity implements DisplayOrdersFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "deliveryclient.DisplayOrdersActivity";
     public static String EXTRA_ADDRESS = "address";
@@ -78,5 +78,10 @@ public class DisplayOrdersActivity extends ActionBarActivity {
             } else
                 fragment.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onFragmentInteraction() {
+        finish();
     }
 }

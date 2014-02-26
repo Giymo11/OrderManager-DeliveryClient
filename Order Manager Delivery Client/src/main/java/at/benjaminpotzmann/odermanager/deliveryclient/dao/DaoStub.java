@@ -158,4 +158,11 @@ public class DaoStub {
     public void addAddress(Address address) {
         addresses.add(address);
     }
+
+    public void setDeliveredForAddress(Address address) {
+        List<Order> orders = getOrdersForAddress(address);
+        for (Order order : orders) {
+            order.setDelivered(true);
+        }
+    }
 }

@@ -1,15 +1,18 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.fragment;
 
+import android.app.Activity;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -34,15 +37,13 @@ public class DisplayOrdersFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_ADDRESS = "address";
 
-    private Address address;
-
-    //private OnFragmentInteractionListener listener;
-
     /**
      * The fragment's ListView/GridView.
      */
-    private AbsListView listView;
+    private ListView listView;
     private TextView textView;
+    private Address address;
+    private OnFragmentInteractionListener listener;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -90,14 +91,13 @@ public class DisplayOrdersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_displayorders, container, false);
 
         // Set the adapter
-        listView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) listView).setAdapter(adapter);
-
-        // Set OnItemClickListener so we can be notified on item clicks
-        //listView.setOnItemClickListener(this);
+        listView = (ListView) view.findViewById(android.R.id.list);
 
         textView = (TextView) view.findViewById(R.id.displayorders_sum);
         updateSum();
+
+        // Set OnItemClickListener so we can be notified on item clicks
+        //listView.setOnItemClickListener(this);
 
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
@@ -106,6 +106,24 @@ public class DisplayOrdersFragment extends Fragment {
             }
         });
 
+        Button deliverButton = new Button(getActivity());
+        deliverButton.setTextAppearance(getActivity(), android.R.attr.borderlessButtonStyle);
+        deliverButton.setText(R.string.displayorders_deliver);
+        deliverButton.setBackgroundColor(getResources().getColor(android.R.color.white));
+        deliverButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DaoStub.getInstance().setDeliveredForAddress(address);
+                Toast.makeText(getActivity(), "" + address + " delivered", Toast.LENGTH_SHORT).show();
+                listener.onFragmentInteraction();
+            }
+        });
+
+        listView.addFooterView(deliverButton);
+
+        ((AdapterView<ListAdapter>) listView).setAdapter(adapter);
+
+
         return view;
     }
 
@@ -113,7 +131,7 @@ public class DisplayOrdersFragment extends Fragment {
         textView.setText("" + PriceFormatHelper.format(calcSum(address)));
     }
 
-    /*@Override
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
@@ -130,7 +148,7 @@ public class DisplayOrdersFragment extends Fragment {
         listener = null;
     }
 
-    @Override
+    /*@Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (null != listener) {
             // Notify the active callbacks interface (the activity, if the
@@ -158,7 +176,7 @@ public class DisplayOrdersFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Order order);
+        public void onFragmentInteraction();
     }
 
 }
