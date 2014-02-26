@@ -166,4 +166,11 @@ public class DaoStub {
                 order.setDelivered(order.getOrdered());
         }
     }
+
+    public void undoDelivery(Address address) {
+        List<Order> orders = getOrdersForAddress(address);
+        for (Order order : orders) {
+            order.setDelivered(Order.NOT_DELIVERED);
+        }
+    }
 }

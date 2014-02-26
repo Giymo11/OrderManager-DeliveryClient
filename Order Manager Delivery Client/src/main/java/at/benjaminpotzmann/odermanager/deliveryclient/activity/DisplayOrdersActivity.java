@@ -43,6 +43,7 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.display_orders, menu);
+
         MenuItemCompat.setShowAsAction(
                 menu.add("Add Product").setIcon(android.R.drawable.ic_menu_add).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
@@ -52,6 +53,18 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
                     }
                 }),
                 MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+
+        MenuItemCompat.setShowAsAction(
+                menu.add(R.string.undo).setIcon(android.R.drawable.ic_menu_revert).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        DaoStub.getInstance().undoDelivery(address);
+                        fragment.notifyDataSetChanged();
+                        return true;
+                    }
+                }),
+                MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+
         return true;
     }
 
