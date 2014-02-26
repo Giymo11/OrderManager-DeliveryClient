@@ -50,15 +50,13 @@ public class OrderAdapter extends ArrayAdapter<Order> {
         final TextView quantity = (TextView) convertView.findViewById(R.id.displayorders_list_quantity);
         final Button more = (Button) convertView.findViewById(R.id.displayorders_list_more);
         final Button less = (Button) convertView.findViewById(R.id.displayorders_list_less);
-        //final CheckBox delivered = (CheckBox) convertView.findViewById(R.id.displayorders_list_delivered);
         final RelativeLayout background = (RelativeLayout) convertView.findViewById(R.id.displayorders_list_background);
 
         name.setText(order.getProduct().getName());
         originalOrder.setText(getContext().getResources().getString(R.string.orderadapter_ordered) + ": " + order.getOrdered() + " á " + PriceFormatHelper.format(order.getProduct().getPrice()));
         // Don't delete the "" + as it is necessary, otherwise it thinks it is a resource id and fails.
         quantity.setText("" + showQuantity(order));
-        background.setBackgroundColor(getContext().getResources().getColor(android.R.color.background_light));
-        //delivered.setChecked(order.isDelivered());
+        updateBackgroundColor(order, background);
 
         more.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,18 +76,11 @@ public class OrderAdapter extends ArrayAdapter<Order> {
             }
         });
 
-        /* delivered.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                order.setDelivered(isChecked);
-            }
-        }); */
-
         return convertView;
     }
 
     private void updateBackgroundColor(Order order, RelativeLayout background) {
-        if (order.getOrdered() == order.getDelivered())
+        if (order.getOrdered() == order.getDelivered() || order.getDelivered() == Order.NOT_DELIVERED)
             background.setBackgroundColor(getContext().getResources().getColor(android.R.color.background_light));
         else
             background.setBackgroundColor(getContext().getResources().getColor(R.color.om_bg_orange_light));

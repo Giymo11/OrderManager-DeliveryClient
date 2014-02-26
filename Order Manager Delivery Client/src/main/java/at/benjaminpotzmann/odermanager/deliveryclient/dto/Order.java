@@ -78,4 +78,6 @@ public class Order implements Serializable {
     public double getTotalPrice() {
         return PriceFormatHelper.round((delivered == NOT_DELIVERED ? ordered : delivered) * product.getPrice());
     }
+
+
 }

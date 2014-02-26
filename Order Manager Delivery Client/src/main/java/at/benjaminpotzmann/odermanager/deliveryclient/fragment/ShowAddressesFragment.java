@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 
+import java.util.Comparator;
+
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
 import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
@@ -37,6 +39,23 @@ public class ShowAddressesFragment extends Fragment implements AdapterView.OnIte
         return fragment;
     }
 
+    public class AddressComparator implements Comparator<Address> {
+        @Override
+        public int compare(Address lhs, Address rhs) {
+            int result = 0;
+            result = lhs.getTown().getZipcode() - rhs.getTown().getZipcode();
+            if (result == 0) {
+                result = lhs.getTown().getLocation().toLowerCase().compareTo(rhs.getTown().getLocation().toLowerCase());
+                if (result == 0) {
+                    result = lhs.getStreet().toLowerCase().compareTo(rhs.getStreet().toLowerCase());
+                    if (result == 0)
+                        result = lhs.getNumber().toLowerCase().compareTo(rhs.getNumber().toLowerCase());
+                }
+            }
+            return result;
+        }
+    }
+
     private Town town;
     private ArrayAdapter<Address> adapter;
     private AbsListView listView;
@@ -51,6 +70,8 @@ public class ShowAddressesFragment extends Fragment implements AdapterView.OnIte
 
         adapter = new ArrayAdapter<Address>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, DaoStub.getInstance().getAddressesForTown(town));
+
+        adapter.sort(new AddressComparator());
     }
 
     @Override
@@ -101,6 +122,7 @@ public class ShowAddressesFragment extends Fragment implements AdapterView.OnIte
 
     public void addAddress(Address address) {
         adapter.add(address);
+        adapter.sort(new AddressComparator());
     }
 
     /**

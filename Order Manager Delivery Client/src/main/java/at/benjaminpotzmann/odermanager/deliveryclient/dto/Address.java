@@ -63,8 +63,8 @@ public class Address implements Serializable {
     @Override
     public int hashCode() {
         int result = town != null ? town.hashCode() : 0;
-        result = 31 * result + (street != null ? street.hashCode() : 0);
-        result = 31 * result + (number != null ? number.hashCode() : 0);
+        result = 31 * result + (street != null ? street.toLowerCase().hashCode() : 0);
+        result = 31 * result + (number != null ? number.toLowerCase().hashCode() : 0);
         return result;
     }
 }

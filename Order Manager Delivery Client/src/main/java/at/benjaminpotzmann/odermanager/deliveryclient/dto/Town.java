@@ -15,6 +15,22 @@ public class Town implements Serializable {
         this.location = location;
     }
 
+    public int getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(int zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     @Override
     public String toString() {
         return "" + zipcode + " " + location;
@@ -37,7 +53,7 @@ public class Town implements Serializable {
     @Override
     public int hashCode() {
         int result = zipcode;
-        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (location != null ? location.toLowerCase().hashCode() : 0);
         return result;
     }
 }
