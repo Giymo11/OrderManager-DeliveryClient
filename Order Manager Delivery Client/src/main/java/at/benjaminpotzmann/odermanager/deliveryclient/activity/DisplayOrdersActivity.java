@@ -11,12 +11,14 @@ import android.widget.Toast;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
+import at.benjaminpotzmann.odermanager.deliveryclient.dto.Order;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.OrderItem;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Product;
 import at.benjaminpotzmann.odermanager.deliveryclient.fragment.DisplayOrdersFragment;
+import at.benjaminpotzmann.odermanager.deliveryclient.fragment.MemoFragment;
 import at.benjaminpotzmann.odermanager.deliveryclient.services.CachingService;
 
-public class DisplayOrdersActivity extends ActionBarActivity implements DisplayOrdersFragment.OnFragmentInteractionListener {
+public class DisplayOrdersActivity extends ActionBarActivity implements DisplayOrdersFragment.OnFragmentInteractionListener, MemoFragment.MemoDialogListener {
 
     private static final String TAG = "deliveryclient.DisplayOrdersActivity";
     public static String EXTRA_ADDRESS = "address";
@@ -35,6 +37,12 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
+        }
+
+        Order order = CachingService.getInstance().getOrderForAddress(address.getId());
+        if (order.getMemoForPock() != null && !order.getMemoForPock().equals("")) {
+            MemoFragment memoFragment = MemoFragment.newInstance(order);
+            memoFragment.show(getSupportFragmentManager(), "create_address");
         }
     }
 
@@ -61,6 +69,18 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
                     public boolean onMenuItemClick(MenuItem item) {
                         CachingService.getInstance().undoDelivery(address.getId());
                         fragment.notifyDataSetChanged();
+                        return true;
+                    }
+                }),
+                MenuItemCompat.SHOW_AS_ACTION_IF_ROOM
+        );
+
+        MenuItemCompat.setShowAsAction(
+                menu.add(R.string.memo).setIcon(android.R.drawable.ic_dialog_email).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        MemoFragment memoFragment = MemoFragment.newInstance(CachingService.getInstance().getOrderForAddress(address.getId()));
+                        memoFragment.show(getSupportFragmentManager(), "create_address");
                         return true;
                     }
                 }),
@@ -101,5 +121,10 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
     @Override
     public void onFragmentInteraction() {
         finish();
+    }
+
+    @Override
+    public void onSave(String memoForCustomer) {
+        CachingService.getInstance().getOrderForAddress(address.getId()).setMemoForCustomer(memoForCustomer);
     }
 }

@@ -20,5 +20,8 @@
     <string name="error_createaddress"><![CDATA[Bitte gültige Straße & Hausnummer eingeben!]]></string>
     <string name="orderadapter_ordered">Bestellt</string>
     <string name="undo">Rückgängig</string>
+    <string name="hint_memo">Antwort (Optional)</string>
+    <string name="memo">Memo</string>
+    <string name="error_savememo">Memo konnte nicht gespeichert werden!</string>
 
 </resources>
