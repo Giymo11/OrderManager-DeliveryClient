@@ -41,8 +41,9 @@ public class AddressAdapter extends ArrayAdapter<Address> {
             Order order = CachingService.getInstance().getOrderForAddress(address.getId());
             if (order.isDelivered())
                 text.setBackgroundColor(getContext().getResources().getColor(R.color.holo_green_light));
-            else if (order.getMemoForPock() == null || order.getMemoForPock().equals(""))
+            /* else if (order.getMemoForPock() != null && !order.getMemoForPock().equals(""))
                 text.setBackgroundColor(getContext().getResources().getColor(R.color.om_bg_orange_light));
+            */
             else
                 text.setBackgroundColor(getContext().getResources().getColor(android.R.color.white));
         } else

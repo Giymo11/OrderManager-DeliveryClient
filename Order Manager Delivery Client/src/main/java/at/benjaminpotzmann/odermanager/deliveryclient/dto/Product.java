@@ -73,7 +73,7 @@ public class Product implements Identifiable {
 
     @Override
     public String toString() {
-        return getTitle() + " á " + PriceFormatHelper.format(price) + "\nCategory " + CachingService.getInstance().getCategoryForId(categoryID);
+        return getTitle() + " á " + PriceFormatHelper.format(price) + "\nKategorie " + CachingService.getInstance().getCategoryForId(categoryID);
     }
 
     public String getTitle() {
