@@ -1,33 +1,49 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.dto;
 
-import java.io.Serializable;
+import at.benjaminpotzmann.odermanager.deliveryclient.interfaces.Identifiable;
+import at.benjaminpotzmann.odermanager.deliveryclient.services.CachingService;
 
 /**
- * The DTO representing the address of one customer who ordered something.
+ * Created with IntelliJ IDEA.
+ * User: Markus
+ * Date: 05.02.14
+ * Time: 13:28
+ * To change this template use File | Settings | File Templates.
  */
-public class Address implements Serializable {
+public class Address implements Identifiable {
+    private int id, townid;
+    private String street, houseNr;
 
-    private Town town;
-    private String street;
-    private String number;
-
-    public Address(Town town, String street, String number) {
-        this.town = town;
+    public Address(int id, int townid, String street, String houseNr) {
+        this.id = id;
+        this.townid = townid;
         this.street = street;
-        this.number = number;
+        this.houseNr = houseNr;
     }
 
-    @Override
-    public String toString() {
-        return "" + street + " " + number + "\n" + town;
+    public Address(String street, String houseNr) {
+        this.street = street;
+        this.houseNr = houseNr;
     }
 
-    public Town getTown() {
-        return town;
+    public String getSQLString() {
+        return id + ", " + street + "', '" + houseNr + "'," + townid;
     }
 
-    public void setTown(Town town) {
-        this.town = town;
+    public String getHouseNr() {
+        return houseNr;
+    }
+
+    public void setHouseNr(String houseNr) {
+        this.houseNr = houseNr;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getStreet() {
@@ -38,33 +54,20 @@ public class Address implements Serializable {
         this.street = street;
     }
 
-    public String getNumber() {
-        return number;
+    public int getTownid() {
+        return townid;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setTownid(int townid) {
+        this.townid = townid;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Address.class != o.getClass()) return false;
-
-        Address address = (Address) o;
-
-        if (number != null ? !number.equals(address.number) : address.number != null) return false;
-        if (street != null ? !street.equals(address.street) : address.street != null) return false;
-        if (town != null ? !town.equals(address.town) : address.town != null) return false;
-
-        return true;
+    public Town getTown() {
+        return CachingService.getInstance().getTown(townid);
     }
 
     @Override
-    public int hashCode() {
-        int result = town != null ? town.hashCode() : 0;
-        result = 31 * result + (street != null ? street.toLowerCase().hashCode() : 0);
-        result = 31 * result + (number != null ? number.toLowerCase().hashCode() : 0);
-        return result;
+    public String toString() {
+        return "" + street + " " + houseNr + ", " + CachingService.getInstance().getTown(townid);
     }
 }

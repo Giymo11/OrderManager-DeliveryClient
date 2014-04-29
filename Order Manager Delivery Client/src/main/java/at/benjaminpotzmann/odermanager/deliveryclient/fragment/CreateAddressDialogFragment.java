@@ -75,7 +75,7 @@ public class CreateAddressDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         try {
                             // Send the positive button event back to the host activity
-                            listener.onCreateAddress(new Address(town, parseStreet(street.getText()), parseHouseNumber(street.getText())));
+                            listener.onCreateAddress(new Address(0, town.getId(), parseStreet(street.getText()), parseHouseNumber(street.getText())));
                         } catch (IllegalArgumentException ex) {
                             Toast.makeText(getActivity(), R.string.error_createaddress, Toast.LENGTH_LONG).show();
                         }

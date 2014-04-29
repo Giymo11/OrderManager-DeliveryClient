@@ -1,59 +1,55 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.dto;
 
-import java.io.Serializable;
+import at.benjaminpotzmann.odermanager.deliveryclient.interfaces.Identifiable;
 
 /**
- * Created by Giymo11 on 20.02.14.
+ * Created with IntelliJ IDEA.
+ * User: Sarah
+ * Date: 26.02.14
+ * Time: 12:20
+ * To change this template use File | Settings | File Templates.
  */
-public class Town implements Serializable {
+public class Town implements Identifiable {
+    private int id;
+    private int plz;
+    private String name;
 
-    private int zipcode;
-    private String location;
+    public Town(int plz, String name) {
+        setName(name);
+        setZipcode(plz);
+    }
 
-    public Town(int zipcode, String location) {
-        this.zipcode = zipcode;
-        this.location = location;
+    public Town(int id, int plz, String name) {
+        this.id = id;
+        this.plz = plz;
+        this.name = name;
+    }
+
+    public String toString() {
+        return "" + getZipcode() + " " + getName();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getZipcode() {
-        return zipcode;
+        return plz;
     }
 
-    public void setZipcode(int zipcode) {
-        this.zipcode = zipcode;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    @Override
-    public String toString() {
-        return "" + zipcode + " " + location;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Town.class != o.getClass()) return false;
-
-        Town town = (Town) o;
-
-        if (zipcode != town.zipcode) return false;
-        if (location != null ? !location.equals(town.location) : town.location != null)
-            return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = zipcode;
-        result = 31 * result + (location != null ? location.toLowerCase().hashCode() : 0);
-        return result;
+    public void setZipcode(int plz) {
+        this.plz = plz;
     }
 }

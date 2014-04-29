@@ -13,11 +13,11 @@ import android.widget.SpinnerAdapter;
 import java.util.List;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
-import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Town;
 import at.benjaminpotzmann.odermanager.deliveryclient.fragment.CreateAddressDialogFragment;
 import at.benjaminpotzmann.odermanager.deliveryclient.fragment.ShowAddressesFragment;
+import at.benjaminpotzmann.odermanager.deliveryclient.services.CachingService;
 
 public class ShowAddressesActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, ShowAddressesFragment.OnFragmentInteractionListener, CreateAddressDialogFragment.CreateAddressDialogListener {
 
@@ -34,7 +34,7 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showaddresses);
 
-        townList = DaoStub.getInstance().getTowns();
+        townList = CachingService.getInstance().getTowns();
 
         // Set up the action bar to show a dropdown list.
         final ActionBar actionBar = getSupportActionBar();
@@ -103,7 +103,7 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
     public boolean onNavigationItemSelected(int position, long id) {
         // When the given dropdown item is selected, show its contents in the
         // container view.
-        fragment = ShowAddressesFragment.newInstanceForTown(DaoStub.getInstance().getTowns().get(position));
+        fragment = ShowAddressesFragment.newInstanceForTown(CachingService.getInstance().getTowns().get(position));
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
 
         return true;
@@ -119,7 +119,7 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
 
     @Override
     public void onCreateAddress(Address address) {
-        DaoStub.getInstance().addAddress(address);
+        CachingService.getInstance().addAddress(address);
         if (fragment != null)
             fragment.addAddress(address);
         onAddressPicked(address);

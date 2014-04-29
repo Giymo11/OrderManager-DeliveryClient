@@ -5,6 +5,7 @@ import android.database.DataSetObserver;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,10 @@ import java.util.List;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
 import at.benjaminpotzmann.odermanager.deliveryclient.adapter.OrderAdapter;
-import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
-import at.benjaminpotzmann.odermanager.deliveryclient.dto.Order;
+import at.benjaminpotzmann.odermanager.deliveryclient.dto.OrderItem;
 import at.benjaminpotzmann.odermanager.deliveryclient.helper.PriceFormatHelper;
+import at.benjaminpotzmann.odermanager.deliveryclient.services.CachingService;
 
 /**
  * A fragment representing a list of Items.
@@ -73,14 +74,19 @@ public class DisplayOrdersFragment extends Fragment {
 
         if (getArguments() != null) {
             address = (Address) getArguments().getSerializable(ARG_ADDRESS);
+            Log.d("DisplayOrdersFragment", "Address: " + address);
+            Log.d("DisplayOrdersFragment", "Order: " + CachingService.getInstance().getOrderForAddress(address.getId()));
+            Log.d("DisplayOrdersFragment", "OrderID: " + CachingService.getInstance().getOrderForAddress(address.getId()).getId());
+            Log.d("DisplayOrdersFragment", "OrderItems: " + CachingService.getInstance().getOrderItemsForOrder(CachingService.getInstance().getOrderForAddress(address.getId()).getId()));
+            CachingService.getInstance().getOrderItemsForOrder(CachingService.getInstance().getOrderForAddress(address.getId()).getId());
             adapter = new OrderAdapter(getActivity(), R.layout.item_order, address);
         }
     }
 
     private double calcSum(Address address) {
         double sum = 0;
-        List<Order> orders = DaoStub.getInstance().getOrdersForAddress(address);
-        for (Order order : orders) {
+        List<OrderItem> orders = CachingService.getInstance().getOrderItemsForOrder(CachingService.getInstance().getOrderForAddress(address.getId()).getId());
+        for (OrderItem order : orders) {
             sum += order.getTotalPrice();
         }
         return sum;
@@ -109,19 +115,20 @@ public class DisplayOrdersFragment extends Fragment {
 
         Button deliverButton = new Button(getActivity());
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            deliverButton.setTextAppearance(getActivity(), android.R.attr.borderlessButtonStyle);
+            deliverButton.setTextAppearance(getActivity(), android.R.style.Widget_DeviceDefault_Button_Borderless);
         } else {
-            deliverButton.setTextAppearance(getActivity(), android.R.attr.textAppearanceLarge);
+            deliverButton.setTextAppearance(getActivity(), android.R.style.TextAppearance_DeviceDefault_Large);
         }
         int horizontalPaddingInPixels = getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
         int verticalPaddingInPixels = getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
         deliverButton.setPadding(horizontalPaddingInPixels, verticalPaddingInPixels, horizontalPaddingInPixels, verticalPaddingInPixels);
         deliverButton.setText(R.string.displayorders_deliver);
         deliverButton.setBackgroundColor(getResources().getColor(android.R.color.white));
+        deliverButton.setTextColor(getResources().getColor(android.R.color.primary_text_light));
         deliverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DaoStub.getInstance().setDeliveredForAddress(address);
+                CachingService.getInstance().setDeliveredForAddress(address.getId());
                 Toast.makeText(getActivity(), "" + address + " delivered", Toast.LENGTH_SHORT).show();
                 listener.onFragmentInteraction();
             }
@@ -165,7 +172,7 @@ public class DisplayOrdersFragment extends Fragment {
         }
     }*/
 
-    public void addOrder(Order order) {
+    public void addOrder(OrderItem order) {
         adapter.add(order);
     }
 

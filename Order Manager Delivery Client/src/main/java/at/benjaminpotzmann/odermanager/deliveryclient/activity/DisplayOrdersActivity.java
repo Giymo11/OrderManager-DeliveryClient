@@ -10,11 +10,11 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
-import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
-import at.benjaminpotzmann.odermanager.deliveryclient.dto.Order;
+import at.benjaminpotzmann.odermanager.deliveryclient.dto.OrderItem;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Product;
 import at.benjaminpotzmann.odermanager.deliveryclient.fragment.DisplayOrdersFragment;
+import at.benjaminpotzmann.odermanager.deliveryclient.services.CachingService;
 
 public class DisplayOrdersActivity extends ActionBarActivity implements DisplayOrdersFragment.OnFragmentInteractionListener {
 
@@ -52,18 +52,20 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
                         return true;
                     }
                 }),
-                MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+                MenuItemCompat.SHOW_AS_ACTION_ALWAYS
+        );
 
         MenuItemCompat.setShowAsAction(
                 menu.add(R.string.undo).setIcon(android.R.drawable.ic_menu_revert).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        DaoStub.getInstance().undoDelivery(address);
+                        CachingService.getInstance().undoDelivery(address.getId());
                         fragment.notifyDataSetChanged();
                         return true;
                     }
                 }),
-                MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+                MenuItemCompat.SHOW_AS_ACTION_IF_ROOM
+        );
 
         return true;
     }
@@ -87,9 +89,9 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
         if (requestCode == PickProductActivity.REQUEST_PRODUCTS && resultCode == PickProductActivity.RESULT_OK) {
             Product product = (Product) data.getSerializableExtra(PickProductActivity.EXTRA_PRODUCT);
             Log.d(TAG, product.toString());
-            Order order = DaoStub.getInstance().addProductForAddress(product, address);
+            OrderItem order = CachingService.getInstance().createOrderItem(product.getId(), address.getId());
             if (order != null) {
-                Log.d(TAG, order.toFullString());
+                Log.d(TAG, order.toString());
                 fragment.addOrder(order);
             } else
                 fragment.notifyDataSetChanged();

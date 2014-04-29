@@ -1,83 +1,84 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.dto;
 
-import java.io.Serializable;
-
-import at.benjaminpotzmann.odermanager.deliveryclient.helper.PriceFormatHelper;
+import at.benjaminpotzmann.odermanager.deliveryclient.interfaces.Identifiable;
 
 /**
- * Created by Giymo11 on 20.02.14.
- * The DTO for a order
+ * Created with IntelliJ IDEA.
+ * User: Sarah
+ * Date: 26.02.14
+ * Time: 15:59
+ * To change this template use File | Settings | File Templates.
  */
-public class Order implements Serializable {
+public class Order implements Identifiable {
+    private int id;
+    private int tourid;
+    private int addressid;
+    private String memoForPock;
+    private String memoForCustomer;
+    private boolean delivered;
 
-    public static final int NOT_DELIVERED = -1;
-
-    private Address address;
-    private Product product;
-    private int ordered;
-    private int delivered;
-
-    public Order(Address address, Product product, int ordered) {
-        this.address = address;
-        this.product = product;
-        this.ordered = ordered;
-        this.delivered = NOT_DELIVERED;
+    public Order(int tourid, int addressid, String memoForCustomer, String memoForPock, boolean delivered) {
+        setTourid(tourid);
+        setAddressid(addressid);
+        setMemoForCustomer(memoForCustomer);
+        setMemoForPock(memoForPock);
+        setDelivered(delivered);
     }
 
-    public int getDelivered() {
-        return delivered;
-    }
-
-    public void setDelivered(int delivered) {
+    public Order(int id, int tourid, int addressid, String memoForPock, String memoForCustomer, boolean delivered) {
+        this.id = id;
+        this.tourid = tourid;
+        this.addressid = addressid;
+        this.memoForPock = memoForPock;
+        this.memoForCustomer = memoForCustomer;
         this.delivered = delivered;
     }
 
-    public Address getAddress() {
-        return address;
+    public int getId() {
+        return id;
     }
 
-    public Product getProduct() {
-        return product;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getOrdered() {
-        return ordered;
+    public int getTourid() {
+        return tourid;
     }
 
-    public int increaseDelivered() {
-        if (delivered == NOT_DELIVERED)
-            delivered = ordered;
-        return ++delivered;
+    public void setTourid(int tourid) {
+        this.tourid = tourid;
     }
 
-    public int decreaseDelivered() {
-        if (delivered > 0)
-            return --delivered;
-        else
-            return 0;
+    public int getAddressid() {
+        return addressid;
     }
 
-    public void setOrdered(int ordered) {
-        this.ordered = ordered;
+    public void setAddressid(int addressid) {
+        this.addressid = addressid;
     }
 
-    public String toFullString() {
-        return "Order{" +
-                "address=" + address +
-                ", product=" + product +
-                ", ordered=" + ordered +
-                ", delivered=" + delivered +
-                '}';
+    public String getMemoForPock() {
+        return memoForPock;
     }
 
-    @Override
-    public String toString() {
-        return "" + ordered + " mal " + product.getName() + " á " + product.getPrice() + " = " + PriceFormatHelper.format(getTotalPrice());
+    public void setMemoForPock(String memoForPock) {
+        this.memoForPock = memoForPock;
     }
 
-    public double getTotalPrice() {
-        return PriceFormatHelper.round((delivered == NOT_DELIVERED ? ordered : delivered) * product.getPrice());
+    public String getMemoForCustomer() {
+        return memoForCustomer;
     }
 
+    public void setMemoForCustomer(String memoForCustomer) {
+        this.memoForCustomer = memoForCustomer;
+    }
 
+    public boolean isDelivered() {
+        return delivered;
+    }
+
+    public void setDelivered(boolean delivered) {
+        this.delivered = delivered;
+    }
 }

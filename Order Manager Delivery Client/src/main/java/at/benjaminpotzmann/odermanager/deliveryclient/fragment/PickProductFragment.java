@@ -12,8 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
-import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Product;
+import at.benjaminpotzmann.odermanager.deliveryclient.services.CachingService;
 
 
 /**
@@ -36,7 +36,7 @@ public class PickProductFragment extends Fragment implements AdapterView.OnItemC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new ArrayAdapter<Product>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DaoStub.getInstance().getProducts());
+                android.R.layout.simple_list_item_1, android.R.id.text1, CachingService.getInstance().getProducts());
     }
 
     @Override

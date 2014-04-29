@@ -12,27 +12,27 @@ import android.widget.TextView;
 import java.util.List;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
-import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
-import at.benjaminpotzmann.odermanager.deliveryclient.dto.Order;
+import at.benjaminpotzmann.odermanager.deliveryclient.dto.OrderItem;
 import at.benjaminpotzmann.odermanager.deliveryclient.helper.PriceFormatHelper;
+import at.benjaminpotzmann.odermanager.deliveryclient.services.CachingService;
 
 /**
  * Created by Giymo11 on 21.02.14.
  */
-public class OrderAdapter extends ArrayAdapter<Order> {
+public class OrderAdapter extends ArrayAdapter<OrderItem> {
 
     private static final String TAG = "OrderAdapter";
     private Address address = null;
     private int resource;
 
-    public OrderAdapter(Context context, int resource, List<Order> objects) {
+    public OrderAdapter(Context context, int resource, List<OrderItem> objects) {
         super(context, resource, objects);
         this.resource = resource;
     }
 
     public OrderAdapter(Context context, int resource, Address address) {
-        super(context, resource, DaoStub.getInstance().getOrdersForAddress(address));
+        super(context, resource, CachingService.getInstance().getOrderItemsForOrder(CachingService.getInstance().getOrderForAddress(address.getId()).getId()));
         this.address = address;
         this.resource = resource;
     }
@@ -43,7 +43,7 @@ public class OrderAdapter extends ArrayAdapter<Order> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(resource, null);
         }
-        final Order order = this.getItem(position);
+        final OrderItem order = this.getItem(position);
 
         final TextView name = (TextView) convertView.findViewById(R.id.displayorders_list_ordername);
         final TextView originalOrder = (TextView) convertView.findViewById(R.id.displayorders_list_singleprice);
@@ -52,8 +52,8 @@ public class OrderAdapter extends ArrayAdapter<Order> {
         final Button less = (Button) convertView.findViewById(R.id.displayorders_list_less);
         final RelativeLayout background = (RelativeLayout) convertView.findViewById(R.id.displayorders_list_background);
 
-        name.setText(order.getProduct().getName());
-        originalOrder.setText(getContext().getResources().getString(R.string.orderadapter_ordered) + ": " + order.getOrdered() + " á " + PriceFormatHelper.format(order.getProduct().getPrice()));
+        name.setText(CachingService.getInstance().getProductForId(order.getProductid()).getTitle());
+        originalOrder.setText(getContext().getResources().getString(R.string.orderadapter_ordered) + ": " + order.getOrdered() + " á " + PriceFormatHelper.format(CachingService.getInstance().getProductForId(order.getProductid()).getPrice()));
         // Don't delete the "" + as it is necessary, otherwise it thinks it is a resource id and fails.
         quantity.setText("" + showQuantity(order));
         updateBackgroundColor(order, background);
@@ -79,15 +79,15 @@ public class OrderAdapter extends ArrayAdapter<Order> {
         return convertView;
     }
 
-    private void updateBackgroundColor(Order order, RelativeLayout background) {
-        if (order.getOrdered() == order.getDelivered() || order.getDelivered() == Order.NOT_DELIVERED)
+    private void updateBackgroundColor(OrderItem order, RelativeLayout background) {
+        if (order.getOrdered() == order.getDelivered() || order.getDelivered() == OrderItem.NOT_DELIVERED)
             background.setBackgroundColor(getContext().getResources().getColor(android.R.color.background_light));
         else
             background.setBackgroundColor(getContext().getResources().getColor(R.color.om_bg_orange_light));
     }
 
-    private int showQuantity(Order order) {
-        if (order.getDelivered() != Order.NOT_DELIVERED)
+    private int showQuantity(OrderItem order) {
+        if (order.getDelivered() != OrderItem.NOT_DELIVERED)
             return order.getDelivered();
         else
             return order.getOrdered();

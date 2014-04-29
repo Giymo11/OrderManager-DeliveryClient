@@ -14,9 +14,10 @@ import android.widget.ListAdapter;
 import java.util.Comparator;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
-import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoStub;
+import at.benjaminpotzmann.odermanager.deliveryclient.adapter.AddressAdapter;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Town;
+import at.benjaminpotzmann.odermanager.deliveryclient.services.CachingService;
 
 
 /**
@@ -45,11 +46,11 @@ public class ShowAddressesFragment extends Fragment implements AdapterView.OnIte
             int result = 0;
             result = lhs.getTown().getZipcode() - rhs.getTown().getZipcode();
             if (result == 0) {
-                result = lhs.getTown().getLocation().toLowerCase().compareTo(rhs.getTown().getLocation().toLowerCase());
+                result = lhs.getTown().getName().toLowerCase().compareTo(rhs.getTown().getName().toLowerCase());
                 if (result == 0) {
                     result = lhs.getStreet().toLowerCase().compareTo(rhs.getStreet().toLowerCase());
                     if (result == 0)
-                        result = lhs.getNumber().toLowerCase().compareTo(rhs.getNumber().toLowerCase());
+                        result = lhs.getHouseNr().toLowerCase().compareTo(rhs.getHouseNr().toLowerCase());
                 }
             }
             return result;
@@ -68,8 +69,11 @@ public class ShowAddressesFragment extends Fragment implements AdapterView.OnIte
         if (getArguments() != null)
             town = (Town) getArguments().getSerializable(ARG_TOWN);
 
-        adapter = new ArrayAdapter<Address>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DaoStub.getInstance().getAddressesForTown(town));
+        /*adapter = new ArrayAdapter<Address>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, CachingService.getInstance().getAddressesForTownId(town.getId()));*/
+
+        adapter = new AddressAdapter(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, CachingService.getInstance().getAddressesForTownId(town.getId()));
 
         adapter.sort(new AddressComparator());
     }
@@ -89,10 +93,12 @@ public class ShowAddressesFragment extends Fragment implements AdapterView.OnIte
         return view;
     }
 
-    /*@Override
+    @Override
     public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
         listView.invalidate();
-    }*/
+    }
 
     @Override
     public void onAttach(Activity activity) {
