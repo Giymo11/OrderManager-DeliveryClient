@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.R;
@@ -19,7 +21,7 @@ import at.benjaminpotzmann.odermanager.deliveryclient.fragment.CreateAddressDial
 import at.benjaminpotzmann.odermanager.deliveryclient.fragment.ShowAddressesFragment;
 import at.benjaminpotzmann.odermanager.deliveryclient.services.CachingService;
 
-public class ShowAddressesActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, ShowAddressesFragment.OnFragmentInteractionListener, CreateAddressDialogFragment.CreateAddressDialogListener {
+public class ShowAddressesActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, ShowAddressesFragment.OnFragmentInteractionListener, CreateAddressDialogFragment.CreateAddressDialogListener, PropertyChangeListener {
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -34,18 +36,7 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showaddresses);
 
-        townList = CachingService.getInstance().getTowns();
-
-        // Set up the action bar to show a dropdown list.
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-        // Specify a SpinnerAdapter to populate the dropdown list.
-        SpinnerAdapter adapter = new ArrayAdapter<Town>(actionBar.getThemedContext(), android.R.layout.simple_list_item_1, android.R.id.text1, townList);
-
-        // Set up the dropdown list navigation in the action bar.
-        actionBar.setListNavigationCallbacks(adapter, this);
+        CachingService.getInstance().add(this);
     }
 
     @Override
@@ -78,6 +69,8 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
                     }
                 }),
                 MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+
+
         return true;
     }
 
@@ -123,5 +116,25 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
         if (fragment != null)
             fragment.addAddress(address);
         onAddressPicked(address);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent event) {
+        reloadTownsAdapter();
+    }
+
+    private void reloadTownsAdapter() {
+        townList = CachingService.getInstance().getTowns();
+
+        // Set up the action bar to show a dropdown list.
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+        // Specify a SpinnerAdapter to populate the dropdown list.
+        SpinnerAdapter adapter = new ArrayAdapter<Town>(actionBar.getThemedContext(), android.R.layout.simple_list_item_1, android.R.id.text1, townList);
+
+        // Set up the dropdown list navigation in the action bar.
+        actionBar.setListNavigationCallbacks(adapter, this);
     }
 }

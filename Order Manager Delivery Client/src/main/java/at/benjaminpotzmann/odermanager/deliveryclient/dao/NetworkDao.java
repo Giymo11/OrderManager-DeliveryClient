@@ -43,19 +43,28 @@ public class NetworkDao implements DaoInterface {
         return instance;
     }
 
-    private synchronized String getJsonObject(String path) {
+    private synchronized String getJsonString(String path) {
         try {
             // Create a new HTTP Client
             // Setup the get request
-            HttpGet httpGetRequest = new HttpGet("http://192.168.43.150:8080/rest" + path);
+            HttpGet httpGetRequest = new HttpGet("http://10.0.0.1:8080/ordermanager/rest" + path);
 
             // Execute the request in the client
             HttpResponse httpResponse = defaultClient.execute(httpGetRequest);
             // Grab the response
+            if (httpResponse.getEntity() == null)
+                return null;
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-            int read = reader.read(buffer);
-            Log.d("NetworkDao", new String(buffer.array()));
-            return new String(buffer.array());
+            String read = reader.readLine();
+            if (read == null)
+                throw new NullPointerException();
+
+            Log.d("NetworkDao", "" + read);
+
+            return read;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         } catch (Exception e) {
             // In your production code handle any errors and catch the individual exceptions
             e.printStackTrace();
@@ -65,12 +74,12 @@ public class NetworkDao implements DaoInterface {
 
     @Override
     public List<Town> getTowns() {
-        // Instantiate a JSON object from the request response
-        try {
-            JSONArray array = new JSONArray(getJsonObject("/towns"));
-            JSONObject json;
 
-            List<Town> towns = new ArrayList<Town>();
+        List<Town> towns = new ArrayList<Town>();
+
+        try {
+            JSONArray array = new JSONArray(getJsonString("/towns"));
+            JSONObject json;
 
             int id, plz;
             String name;
@@ -82,21 +91,20 @@ public class NetworkDao implements DaoInterface {
                 name = json.getString("name");
                 towns.add(new Town(id, plz, name));
             }
-
-            return towns;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return towns;
     }
 
     @Override
     public List<Address> getAddressesForTownId(int townId) {
-        try {
-            JSONArray array = new JSONArray(getJsonObject("/addresses/" + townId));
-            JSONObject json;
 
-            List<Address> addresses = new ArrayList<Address>();
+        List<Address> addresses = new ArrayList<Address>();
+
+        try {
+            JSONArray array = new JSONArray(getJsonString("/addresses/" + townId));
+            JSONObject json;
 
             int id, townid;
             String street, houseNr;
@@ -109,17 +117,20 @@ public class NetworkDao implements DaoInterface {
                 houseNr = json.getString("houseNr");
                 addresses.add(new Address(id, townid, street, houseNr));
             }
-            return addresses;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return addresses;
     }
 
     @Override
     public Order getCurrentOrderForAddressId(int addressId) {
         try {
-            JSONObject json = new JSONObject(getJsonObject("/orders/" + addressId));
+            String jsonString = getJsonString("/orders/" + addressId);
+            if (jsonString == null)
+                throw new NullPointerException("The path " + "/orders/" + addressId + " gave no response from the server!");
+
+            JSONObject json = new JSONObject(jsonString);
 
             int id, tourid, addressid;
             String memoForPock, memoForCustomer;
@@ -133,6 +144,12 @@ public class NetworkDao implements DaoInterface {
             delivered = json.getBoolean("delivered");
 
             return new Order(id, tourid, addressid, memoForPock, memoForCustomer, delivered);
+        } catch (NullPointerException ex) {
+            if (ex.getMessage() != null)
+                Log.d("NetworkDao", ex.getMessage());
+            else
+                ex.printStackTrace();
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -141,11 +158,12 @@ public class NetworkDao implements DaoInterface {
 
     @Override
     public List<OrderItem> getOrderItemsForOrderId(int orderId) {
-        try {
-            JSONArray array = new JSONArray(getJsonObject("/orderitems/" + orderId));
-            JSONObject json;
 
-            List<OrderItem> orderItems = new ArrayList<OrderItem>();
+        List<OrderItem> orderItems = new ArrayList<OrderItem>();
+
+        try {
+            JSONArray array = new JSONArray(getJsonString("/orderitems/" + orderId));
+            JSONObject json;
 
             int id, orderid, productid, ordered, delivered;
 
@@ -160,21 +178,20 @@ public class NetworkDao implements DaoInterface {
 
                 orderItems.add(new OrderItem(id, orderid, productid, ordered, delivered));
             }
-
-            return orderItems;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return orderItems;
     }
 
     @Override
     public List<Category> getCategories() {
-        try {
-            JSONArray array = new JSONArray(getJsonObject("/categories"));
-            JSONObject json;
 
-            List<Category> categories = new ArrayList<Category>();
+        List<Category> categories = new ArrayList<Category>();
+
+        try {
+            JSONArray array = new JSONArray(getJsonString("/categories"));
+            JSONObject json;
 
             int id;
             String name;
@@ -187,21 +204,20 @@ public class NetworkDao implements DaoInterface {
 
                 categories.add(new Category(id, name));
             }
-
-            return categories;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return categories;
     }
 
     @Override
     public List<Product> getProducts() {
-        try {
-            JSONArray array = new JSONArray(getJsonObject("/products"));
-            JSONObject json;
 
-            List<Product> products = new ArrayList<Product>();
+        List<Product> products = new ArrayList<Product>();
+
+        try {
+            JSONArray array = new JSONArray(getJsonString("/products"));
+            JSONObject json;
 
             int id, categoryID, priority, pictureID;
             String title, description, picture;
@@ -223,11 +239,9 @@ public class NetworkDao implements DaoInterface {
 
                 products.add(new Product(id, categoryID, priority, title, description, price, null, pictureID, visible));
             }
-
-            return products;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return products;
     }
 }

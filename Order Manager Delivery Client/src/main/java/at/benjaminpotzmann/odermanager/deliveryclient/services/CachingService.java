@@ -2,8 +2,11 @@ package at.benjaminpotzmann.odermanager.deliveryclient.services;
 
 import android.os.AsyncTask;
 
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,17 +25,18 @@ import at.benjaminpotzmann.odermanager.deliveryclient.dto.Town;
 public class CachingService {
 
     private static CachingService instance;
-    private static DaoInterface dao;
+    private DaoInterface dao;
 
-    private static Map<Integer, Town> townMap = new HashMap<Integer, Town>();
-    private static Map<Integer, Address> addressMap = new HashMap<Integer, Address>();
-    private static Map<Integer, Order> orderMap = new HashMap<Integer, Order>();
-    private static Map<Integer, OrderItem> orderItemMap = new HashMap<Integer, OrderItem>();
-    private static Map<Integer, Category> categoryMap = new HashMap<Integer, Category>();
-    private static Map<Integer, Product> productMap = new HashMap<Integer, Product>();
+    private Map<Integer, Town> townMap = new HashMap<Integer, Town>();
+    private Map<Integer, Address> addressMap = new HashMap<Integer, Address>();
+    private Map<Integer, Order> orderMap = new HashMap<Integer, Order>();
+    private Map<Integer, OrderItem> orderItemMap = new HashMap<Integer, OrderItem>();
+    private Map<Integer, Category> categoryMap = new HashMap<Integer, Category>();
+    private Map<Integer, Product> productMap = new HashMap<Integer, Product>();
 
     private static int tempId = 0;
 
+    private List<PropertyChangeListener> observers = new LinkedList<PropertyChangeListener>();
 
     private CachingService() {
         dao = NetworkDao.getInstance();
@@ -44,6 +48,26 @@ public class CachingService {
             instance = new CachingService();
         }
         return instance;
+    }
+
+    public boolean add(PropertyChangeListener object) {
+        return observers.add(object);
+    }
+
+    public boolean addAll(Collection<? extends PropertyChangeListener> collection) {
+        return observers.addAll(collection);
+    }
+
+    public PropertyChangeListener remove(int location) {
+        return observers.remove(location);
+    }
+
+    public boolean remove(Object object) {
+        return observers.remove(object);
+    }
+
+    public boolean removeAll(Collection<?> collection) {
+        return observers.removeAll(collection);
     }
 
     public void getDataFromServer() {
@@ -62,13 +86,22 @@ public class CachingService {
                     for (Address address : dao.getAddressesForTownId(town.getId())) {
                         addressMap.put(address.getId(), address);
                         Order order = dao.getCurrentOrderForAddressId(address.getId());
-                        orderMap.put(order.getId(), order);
-                        for (OrderItem orderItem : dao.getOrderItemsForOrderId(order.getId())) {
-                            orderItemMap.put(orderItem.getId(), orderItem);
+                        if (order != null) {
+                            orderMap.put(order.getId(), order);
+                            for (OrderItem orderItem : dao.getOrderItemsForOrderId(order.getId())) {
+                                orderItemMap.put(orderItem.getId(), orderItem);
+                            }
                         }
                     }
                 }
                 return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                for (PropertyChangeListener propertyChangeListener : observers)
+                    propertyChangeListener.propertyChange(null);
+                super.onPostExecute(aVoid);
             }
         }.execute();
     }
@@ -104,7 +137,7 @@ public class CachingService {
                 return order;
         }
 
-        Order order = new Order(tempId, 1, addressId, null, null, false);
+        Order order = new Order(--tempId, 1, addressId, null, null, false);
         orderMap.put(order.getId(), order);
         return order;
     }
