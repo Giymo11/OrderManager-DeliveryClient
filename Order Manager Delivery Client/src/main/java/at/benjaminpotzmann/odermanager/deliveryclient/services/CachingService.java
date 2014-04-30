@@ -27,12 +27,12 @@ public class CachingService {
     private static CachingService instance;
     private DaoInterface dao;
 
-    private Map<Integer, Town> townMap = new HashMap<Integer, Town>();
-    private Map<Integer, Address> addressMap = new HashMap<Integer, Address>();
-    private Map<Integer, Order> orderMap = new HashMap<Integer, Order>();
-    private Map<Integer, OrderItem> orderItemMap = new HashMap<Integer, OrderItem>();
-    private Map<Integer, Category> categoryMap = new HashMap<Integer, Category>();
-    private Map<Integer, Product> productMap = new HashMap<Integer, Product>();
+    private Map<Integer, Town> townMap;
+    private Map<Integer, Address> addressMap;
+    private Map<Integer, Order> orderMap;
+    private Map<Integer, OrderItem> orderItemMap;
+    private Map<Integer, Category> categoryMap;
+    private Map<Integer, Product> productMap;
 
     private static int tempId = 0;
 
@@ -74,6 +74,9 @@ public class CachingService {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+
+                resetAllMaps();
+
                 for (Category category : dao.getCategories()) {
                     categoryMap.put(category.getId(), category);
                 }
@@ -104,6 +107,15 @@ public class CachingService {
                 super.onPostExecute(aVoid);
             }
         }.execute();
+    }
+
+    private void resetAllMaps() {
+        townMap = new HashMap<Integer, Town>();
+        addressMap = new HashMap<Integer, Address>();
+        orderMap = new HashMap<Integer, Order>();
+        orderItemMap = new HashMap<Integer, OrderItem>();
+        categoryMap = new HashMap<Integer, Category>();
+        productMap = new HashMap<Integer, Product>();
     }
 
     public List<Town> getTowns() {
