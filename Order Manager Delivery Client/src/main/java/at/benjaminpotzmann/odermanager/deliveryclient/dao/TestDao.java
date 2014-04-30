@@ -91,20 +91,28 @@ public class TestDao implements DaoInterface {
     }
 
     @Override
+    public List<Product> getProducts() {
+        List<Product> products = new ArrayList<Product>();
+
+        products.add(new Product(1, 1, 1, "Roggenbrot 0.5 kg", "Das Klassische Roggenbrot im handlichen Format", 0.8f, 1, true));
+        products.add(new Product(2, 1, 2, "Roggenbrot 1 kg", "Das Klassische Roggenbrot", 1.4f, 1, true));
+        products.add(new Product(3, 1, 3, "Mischbrot 0.5 kg", "Ein Mischbrot aus Weizen und Roggen", 1.2f, 1, true));
+
+        products.add(new Product(4, 2, 4, "Zimtschnecke", "Die zimtige Spezialität des Hauses", 0.9f, 1, true));
+        products.add(new Product(5, 2, 5, "Krapfen", "mit Marillenmarmelade gefüllt!", 0.5f, 1, true));
+
+        products.add(new Product(6, 3, 6, "Pizzastangerl", "Die perfekte Jause", 0.6f, 1, true));
+        products.add(new Product(7, 3, 7, "Kipferl", "Für Zwischendurch", 0.7f, 1, true));
+
+        return products;
+    }
+
     public List<Product> getProductsForCategoryId(int id) {
         List<Product> products = new ArrayList<Product>();
-        String pic = "noimage.png";
 
-        if (id == 1) {
-            products.add(new Product(1, id, 1, "Roggenbrot 0.5 kg", "Das Klassische Roggenbrot im handlichen Format", 0.8f, 1, true));
-            products.add(new Product(2, id, 2, "Roggenbrot 1 kg", "Das Klassische Roggenbrot", 1.4f, 1, true));
-            products.add(new Product(3, id, 3, "Mischbrot 0.5 kg", "Ein Mischbrot aus Weizen und Roggen", 1.2f, 1, true));
-        } else if (id == 2) {
-            products.add(new Product(4, id, 4, "Zimtschnecke", "Die zimtige Spezialität des Hauses", 0.9f, 1, true));
-            products.add(new Product(5, id, 5, "Krapfen", "mit Marillenmarmelade gefüllt!", 0.5f, 1, true));
-        } else if (id == 3) {
-            products.add(new Product(6, id, 6, "Pizzastangerl", "Die perfekte Jause", 0.6f, 1, true));
-            products.add(new Product(7, id, 7, "Kipferl", "Für Zwischendurch", 0.7f, 1, true));
+        for (Product product : getProducts()) {
+            if (product.getCategoryID() == id)
+                products.add(product);
         }
 
         return products;

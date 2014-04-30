@@ -1,12 +1,14 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.services;
 
+import android.os.AsyncTask;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import at.benjaminpotzmann.odermanager.deliveryclient.dao.DaoInterface;
-import at.benjaminpotzmann.odermanager.deliveryclient.dao.TestDao;
+import at.benjaminpotzmann.odermanager.deliveryclient.dao.NetworkDao;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Category;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Order;
@@ -33,7 +35,7 @@ public class CachingService {
 
 
     private CachingService() {
-        dao = TestDao.getInstance();
+        dao = NetworkDao.getInstance();
         getDataFromServer();
     }
 
@@ -45,25 +47,30 @@ public class CachingService {
     }
 
     public void getDataFromServer() {
-
-        for (Category category : dao.getCategories()) {
-            categoryMap.put(category.getId(), category);
-            for (Product product : dao.getProductsForCategoryId(category.getId())) {
-                productMap.put(product.getId(), product);
-            }
-        }
-
-        for (Town town : dao.getTowns()) {
-            townMap.put(town.getId(), town);
-            for (Address address : dao.getAddressesForTownId(town.getId())) {
-                addressMap.put(address.getId(), address);
-                Order order = dao.getCurrentOrderForAddressId(address.getId());
-                orderMap.put(order.getId(), order);
-                for (OrderItem orderItem : dao.getOrderItemsForOrderId(order.getId())) {
-                    orderItemMap.put(orderItem.getId(), orderItem);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                for (Category category : dao.getCategories()) {
+                    categoryMap.put(category.getId(), category);
                 }
+                for (Product product : dao.getProducts()) {
+                    productMap.put(product.getId(), product);
+                }
+
+                for (Town town : dao.getTowns()) {
+                    townMap.put(town.getId(), town);
+                    for (Address address : dao.getAddressesForTownId(town.getId())) {
+                        addressMap.put(address.getId(), address);
+                        Order order = dao.getCurrentOrderForAddressId(address.getId());
+                        orderMap.put(order.getId(), order);
+                        for (OrderItem orderItem : dao.getOrderItemsForOrderId(order.getId())) {
+                            orderItemMap.put(orderItem.getId(), orderItem);
+                        }
+                    }
+                }
+                return null;
             }
-        }
+        }.execute();
     }
 
     public List<Town> getTowns() {

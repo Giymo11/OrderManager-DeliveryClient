@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Order Manager Delivery Client/Order Manager Delivery Client.iml" filepath="$PROJECT_DIR$/Order Manager Delivery Client/Order Manager Delivery Client.iml" />
       <module fileurl="file://$PROJECT_DIR$/OrderManager-DeliveryClient.iml" filepath="$PROJECT_DIR$/OrderManager-DeliveryClient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/OrderManager-DeliveryClient.iml" filepath="$PROJECT_DIR$/OrderManager-DeliveryClient.iml" />
       <module fileurl="file://$PROJECT_DIR$/OrderManagerDeliveryClient.iml" filepath="$PROJECT_DIR$/OrderManagerDeliveryClient.iml" />
     </modules>
   </component>

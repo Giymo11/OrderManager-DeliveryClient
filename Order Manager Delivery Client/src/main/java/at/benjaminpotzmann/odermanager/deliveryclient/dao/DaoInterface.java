@@ -23,5 +23,5 @@ public interface DaoInterface {
 
     List<Category> getCategories();
 
-    List<Product> getProductsForCategoryId(int id);
+    List<Product> getProducts();
 }
