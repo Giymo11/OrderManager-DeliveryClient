@@ -1,7 +1,9 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -35,8 +37,8 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showaddresses);
-
-        CachingService.getInstance().add(this);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        CachingService.getInstance(sharedPrefs.getString("server_ip", getResources().getString(R.string.pref_default_serverip))).add(this);
     }
 
     @Override
@@ -60,8 +62,9 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
         MenuItemCompat.setShowAsAction(
-                menu.add("Add Address").setIcon(android.R.drawable.ic_menu_add).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                menu.add("Addresse hinzufügen").setIcon(android.R.drawable.ic_menu_add).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         addAddress(item);
@@ -70,6 +73,27 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
                 }),
                 MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 
+        MenuItemCompat.setShowAsAction(
+                menu.add("Synchronisieren").setIcon(android.R.drawable.stat_notify_sync).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        CachingService.getInstance().getDataFromServer();
+                        return true;
+                    }
+                }),
+                MenuItemCompat.SHOW_AS_ACTION_ALWAYS
+        );
+
+        MenuItemCompat.setShowAsAction(
+                menu.add("Einstellungen").setIcon(android.R.drawable.ic_menu_preferences).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        startActivity(new Intent(ShowAddressesActivity.this, SettingsActivity.class));
+                        return true;
+                    }
+                }),
+                MenuItemCompat.SHOW_AS_ACTION_NEVER
+        );
 
         return true;
     }
@@ -96,8 +120,12 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
     public boolean onNavigationItemSelected(int position, long id) {
         // When the given dropdown item is selected, show its contents in the
         // container view.
-        fragment = ShowAddressesFragment.newInstanceForTown(CachingService.getInstance().getTowns().get(position));
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        try {
+            fragment = ShowAddressesFragment.newInstanceForTown(CachingService.getInstance().getTowns().get(position));
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return true;
     }

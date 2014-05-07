@@ -13,6 +13,10 @@ import at.benjaminpotzmann.odermanager.deliveryclient.dto.Town;
  * Created by Gizmo on 2014-04-29.
  */
 public interface DaoInterface {
+    String getIp();
+
+    void setIp(String ip);
+
     List<Town> getTowns();
 
     List<Address> getAddressesForTownId(int id);
@@ -24,4 +28,10 @@ public interface DaoInterface {
     List<Category> getCategories();
 
     List<Product> getProducts();
+
+    void postAddress(Address address);
+
+    void postOrderItems(int addressId, List<OrderItem> orderItems);
+
+    void postMemo(int addressId, String memo);
 }

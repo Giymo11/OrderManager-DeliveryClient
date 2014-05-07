@@ -41,6 +41,9 @@ public class OrderItem implements Identifiable {
         this.delivered = delivered;
     }
 
+    public OrderItem() {
+    }
+
     public int getId() {
         return id;
     }

@@ -125,6 +125,6 @@ public class DisplayOrdersActivity extends ActionBarActivity implements DisplayO
 
     @Override
     public void onSave(String memoForCustomer) {
-        CachingService.getInstance().getOrderForAddress(address.getId()).setMemoForCustomer(memoForCustomer);
+        CachingService.getInstance().updateMemoForAddress(address.getId(), memoForCustomer);
     }
 }

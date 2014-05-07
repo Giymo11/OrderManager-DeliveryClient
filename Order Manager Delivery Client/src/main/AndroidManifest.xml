@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.ShowAddressesActivity"
+            android:name="at.benjaminpotzmann.odermanager.deliveryclient.activity.ShowAddressesActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,18 +20,24 @@
         </activity>
         <activity
             android:name="at.benjaminpotzmann.odermanager.deliveryclient.activity.DisplayOrdersActivity"
-            android:label="@string/title_activity_display_orders"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName=".activity.ShowAddressesActivity">
+            android:label="@string/title_activity_display_orders"
+            android:parentActivityName="at.benjaminpotzmann.odermanager.deliveryclient.activity.ShowAddressesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
         <activity
             android:name="at.benjaminpotzmann.odermanager.deliveryclient.activity.PickProductActivity"
-            android:label="@string/title_activity_pick_product"
-            android:configChanges="orientation|keyboardHidden|screenSize">
-
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_pick_product"></activity>
+        <activity
+            android:name="at.benjaminpotzmann.odermanager.deliveryclient.activity.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="at.benjaminpotzmann.odermanager.deliveryclient.activity.ShowAddressesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ShowAddressesActivity" />
         </activity>
     </application>
 

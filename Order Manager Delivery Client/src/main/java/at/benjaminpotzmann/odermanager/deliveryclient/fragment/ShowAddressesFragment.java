@@ -17,6 +17,7 @@ import at.benjaminpotzmann.odermanager.deliveryclient.R;
 import at.benjaminpotzmann.odermanager.deliveryclient.adapter.AddressAdapter;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Address;
 import at.benjaminpotzmann.odermanager.deliveryclient.dto.Town;
+import at.benjaminpotzmann.odermanager.deliveryclient.helper.NumberAwareStringComparator;
 import at.benjaminpotzmann.odermanager.deliveryclient.services.CachingService;
 
 
@@ -50,7 +51,7 @@ public class ShowAddressesFragment extends Fragment implements AdapterView.OnIte
                 if (result == 0) {
                     result = lhs.getStreet().toLowerCase().compareTo(rhs.getStreet().toLowerCase());
                     if (result == 0)
-                        result = lhs.getHouseNr().toLowerCase().compareTo(rhs.getHouseNr().toLowerCase());
+                        result = NumberAwareStringComparator.INSTANCE.compare(lhs.getHouseNr().toLowerCase(), rhs.getHouseNr().toLowerCase());
                 }
             }
             return result;

@@ -40,12 +40,21 @@ public class CachingService {
 
     private CachingService() {
         dao = NetworkDao.getInstance();
-        getDataFromServer();
     }
 
     public static CachingService getInstance() {
         if (instance == null) {
             instance = new CachingService();
+            instance.getDataFromServer();
+        }
+        return instance;
+    }
+
+    public static CachingService getInstance(String ip) {
+        if (instance == null) {
+            instance = new CachingService();
+            instance.setNewIp(ip);
+            instance.getDataFromServer();
         }
         return instance;
     }
@@ -125,6 +134,7 @@ public class CachingService {
     public Address addAddress(Address address) {
         address.setId(--tempId);
         addressMap.put(address.getId(), address);
+        dao.postAddress(address);
         return address;
     }
 
@@ -167,10 +177,14 @@ public class CachingService {
         Order order = getOrderForAddress(addressId);
 
         order.setDelivered(true);
-        for (OrderItem orderItem : getOrderItemsForOrder(order.getId())) {
+        List<OrderItem> orderItems = getOrderItemsForOrder(order.getId());
+
+        for (OrderItem orderItem : orderItems) {
             if (orderItem.getDelivered() == OrderItem.NOT_DELIVERED)
                 orderItem.setDelivered(orderItem.getOrdered());
         }
+
+        dao.postOrderItems(addressId, orderItems);
     }
 
     public List<OrderItem> getOrderItemsForOrder(int orderId) {
@@ -207,5 +221,15 @@ public class CachingService {
         for (OrderItem orderItem : getOrderItemsForOrder(order.getId())) {
             orderItem.setDelivered(OrderItem.NOT_DELIVERED);
         }
+    }
+
+    public void updateMemoForAddress(int addressId, String memo) {
+        getOrderForAddress(addressId).setMemoForCustomer(memo);
+        dao.postMemo(addressId, memo);
+    }
+
+    public void setNewIp(String ip) {
+        dao.setIp(ip);
+        getDataFromServer();
     }
 }

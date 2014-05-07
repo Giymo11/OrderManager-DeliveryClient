@@ -1,5 +1,7 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.dao;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,16 @@ public class TestDao implements DaoInterface {
             instance = new TestDao();
         }
         return instance;
+    }
+
+    @Override
+    public String getIp() {
+        return null;
+    }
+
+    @Override
+    public void setIp(String ip) {
+
     }
 
     @Override
@@ -105,6 +117,21 @@ public class TestDao implements DaoInterface {
         products.add(new Product(7, 3, 7, "Kipferl", "Für Zwischendurch", 0.7f, 1, true));
 
         return products;
+    }
+
+    @Override
+    public void postAddress(Address address) {
+        Log.e("TestDao", "OMG TESTDAO USED?!?!?!");
+    }
+
+    @Override
+    public void postOrderItems(int addressId, List<OrderItem> orderItems) {
+        Log.e("TestDao", "OMG TESTDAO USED?!?!?!");
+    }
+
+    @Override
+    public void postMemo(int addressId, String memo) {
+        Log.e("TestDao", "OMG TESTDAO USED?!?!?!");
     }
 
     public List<Product> getProductsForCategoryId(int id) {
