@@ -1,6 +1,7 @@
 package at.benjaminpotzmann.odermanager.deliveryclient.services;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -56,6 +57,8 @@ public class CachingService {
             instance.setNewIp(ip);
             instance.getDataFromServer();
         }
+        instance.setNewIp(ip);
+        Log.d("CachingService", "getInstanced, IP: " + ip);
         return instance;
     }
 

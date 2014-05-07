@@ -223,7 +223,11 @@ public class NetworkDao implements DaoInterface {
         tourid = json.getInt("tourid");
         addressid = json.getInt("addressid");
         memoForPock = json.getString("memoForPock");
+        if (memoForPock.equals("null"))
+            memoForPock = null;
         memoForCustomer = json.getString("memoForCustomer");
+        if (memoForCustomer.equals("null"))
+            memoForCustomer = null;
         delivered = json.getBoolean("delivered");
 
         return new Order(id, tourid, addressid, memoForPock, memoForCustomer, delivered);

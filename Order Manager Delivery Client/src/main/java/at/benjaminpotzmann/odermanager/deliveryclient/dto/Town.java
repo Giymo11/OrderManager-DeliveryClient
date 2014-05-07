@@ -26,7 +26,7 @@ public class Town implements Identifiable {
     }
 
     public String toString() {
-        return "" + getZipcode() + " " + getName();
+        return /*"" + getZipcode() + " " + */getName();
     }
 
     public int getId() {

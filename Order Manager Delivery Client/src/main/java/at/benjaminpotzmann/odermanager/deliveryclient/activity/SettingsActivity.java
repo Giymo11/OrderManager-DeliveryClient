@@ -142,7 +142,7 @@ public class SettingsActivity extends PreferenceActivity {
             String stringValue = value.toString();
 
             if (preference.getKey().equals("server_ip")) {
-                CachingService.getInstance().setNewIp(value.toString());
+                CachingService.getInstance(value.toString()).setNewIp(value.toString());
             }
 
             // For all other preferences, set the summary to the value's

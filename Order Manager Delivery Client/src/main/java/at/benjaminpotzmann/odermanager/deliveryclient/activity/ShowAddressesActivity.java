@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -44,10 +46,10 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         // Restore the previously serialized current dropdown position.
-        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
+        /*if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
             getSupportActionBar().setSelectedNavigationItem(
                     savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-        }
+        }*/
     }
 
     @Override
@@ -77,7 +79,8 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
                 menu.add("Synchronisieren").setIcon(android.R.drawable.stat_notify_sync).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        CachingService.getInstance().getDataFromServer();
+                        CachingService.getInstance(PreferenceManager.getDefaultSharedPreferences(ShowAddressesActivity.this).getString("server_ip", getResources().getString(R.string.pref_default_serverip))).getDataFromServer();
+                        Toast.makeText(ShowAddressesActivity.this, "Synchronisiert..", Toast.LENGTH_LONG).show();
                         return true;
                     }
                 }),
@@ -124,6 +127,8 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
             fragment = ShowAddressesFragment.newInstanceForTown(CachingService.getInstance().getTowns().get(position));
             getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         } catch (Exception e) {
+            // CachingService.getInstance(PreferenceManager.getDefaultSharedPreferences(ShowAddressesActivity.this).getString("server_ip", getResources().getString(R.string.pref_default_serverip))).getDataFromServer();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new Fragment()).commit();
             e.printStackTrace();
         }
 
@@ -148,6 +153,7 @@ public class ShowAddressesActivity extends ActionBarActivity implements ActionBa
 
     @Override
     public void propertyChange(PropertyChangeEvent event) {
+
         reloadTownsAdapter();
     }
 
