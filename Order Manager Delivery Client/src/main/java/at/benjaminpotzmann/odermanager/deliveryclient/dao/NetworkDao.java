@@ -17,7 +17,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +33,10 @@ import at.benjaminpotzmann.odermanager.deliveryclient.dto.Town;
 public class NetworkDao implements DaoInterface {
 
     private static NetworkDao instance;
-    private static CharBuffer buffer;
     private static DefaultHttpClient defaultClient;
     private static String ip = "http://10.0.0.4:8080/ordermanager/rest";
 
     private NetworkDao() {
-        buffer = CharBuffer.allocate(32 * 1024);
         defaultClient = new DefaultHttpClient();
     }
 
@@ -92,7 +89,7 @@ public class NetworkDao implements DaoInterface {
     private void postJsonString(String path, String json) {
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://10.0.0.4:8080/ordermanager/rest" + path);
+        HttpPost httppost = new HttpPost(ip + path);
 
         Log.d("NetworkDao.postJson", json);
 
@@ -148,7 +145,6 @@ public class NetworkDao implements DaoInterface {
 
         try {
             JSONArray array = new JSONArray(getJsonString("/addresses/" + townId));
-            JSONObject json;
 
             for (int i = 0; i < array.length(); ++i) {
                 addresses.add(getAddress(array.getJSONObject(i)));
@@ -305,7 +301,7 @@ public class NetworkDao implements DaoInterface {
 
     private void postPlainString(String path, String s) {
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://10.0.0.4:8080/ordermanager/rest" + path);
+        HttpPost httppost = new HttpPost(ip + path);
 
         Log.d("NetworkDao.postString", s);
 

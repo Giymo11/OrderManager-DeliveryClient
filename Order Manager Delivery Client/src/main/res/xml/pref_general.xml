@@ -12,8 +12,10 @@
         android:singleLine="true"
         android:maxLines="1" />
 
-    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
-    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    <!-- not yet impl..
+
+    <!- NOTE: EditTextPreference accepts EditText attributes. ->
+    <!- NOTE: EditTextPreference's summary should be set to its value by the activity code. ->
     <EditTextPreference
         android:key="username"
         android:title="@string/pref_title_username"
@@ -23,8 +25,8 @@
         android:singleLine="true"
         android:maxLines="1" />
 
-    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
-    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    <!- NOTE: EditTextPreference accepts EditText attributes. ->
+    <!- NOTE: EditTextPreference's summary should be set to its value by the activity code. ->
     <EditTextPreference
         android:key="password"
         android:title="@string/pref_title_password"
@@ -33,6 +35,8 @@
         android:inputType="textPassword"
         android:singleLine="true"
         android:maxLines="1" />
+
+    -->
 
 
 </PreferenceScreen>

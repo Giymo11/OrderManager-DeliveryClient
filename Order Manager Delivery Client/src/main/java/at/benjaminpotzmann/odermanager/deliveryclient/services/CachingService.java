@@ -52,11 +52,8 @@ public class CachingService {
     }
 
     public static CachingService getInstance(String ip) {
-        if (instance == null) {
+        if (instance == null)
             instance = new CachingService();
-            instance.setNewIp(ip);
-            instance.getDataFromServer();
-        }
         instance.setNewIp(ip);
         Log.d("CachingService", "getInstanced, IP: " + ip);
         return instance;
@@ -232,7 +229,9 @@ public class CachingService {
     }
 
     public void setNewIp(String ip) {
+        String tmpIp = dao.getIp();
         dao.setIp(ip);
-        getDataFromServer();
+        if (!tmpIp.equalsIgnoreCase(ip))
+            getDataFromServer();
     }
 }

@@ -97,8 +97,8 @@ public class SettingsActivity extends PreferenceActivity {
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
         bindPreferenceSummaryToValue(findPreference("server_ip"));
-        bindPreferenceSummaryToValue(findPreference("username"));
-        bindPreferenceSummaryToValue(findPreference("password"));
+        //bindPreferenceSummaryToValue(findPreference("username"));
+        //bindPreferenceSummaryToValue(findPreference("password"));
 
     }
 
